@@ -5,20 +5,6 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
 #include "pacman.h"
-
-/*class Map{
-    public:
-        Map(); ///Construtor padrão
-        //Map(ALLEGRO_BITMAP*); ///Construtor Normal
-       //~Map(); ///Desconstrutor
-        ///Metodos;
-        void setMap(ALLEGRO_BITMAP*);
-        ALLEGRO_BITMAP* getMap();
-        void imprimeMap();
-    private:
-        ALLEGRO_BITMAP *mapa;
-};*/
-
 class tijolos{
     public:
         tijolos();
