@@ -33,55 +33,59 @@ char mapa[lines][columns] = {
 "PCPFAAAAAAAAAAAEPCP",
 "PPPPPPPPPPPPPPPPPPP",
 };
-ALLEGRO_BITMAP *pil,*t1;
-void desenha_tijpil(){
+
+void desenha_tijpil(ALLEGRO_BITMAP *pil, ALLEGRO_BITMAP *til){
     int i,j, x = 32, y=32;
-    t1 = NULL;
+    pil = til = NULL;
     for(i = 0; i < lines; i++){
         for(j = 0; j < columns; j++){
+            printf("%c ", mapa[i][j]);
             if(mapa[i][j] == 'P'){
+                pil = al_load_bitmap("Sprites/Candy.png");
                 al_draw_bitmap(pil,x,y,0);
             }
             switch(mapa[i][j]){
                 case 'A':
-                    t1 = al_load_bitmap("Sprites/B1.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B1.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'B':
-                    t1 = al_load_bitmap("Sprites/B2.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B2.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'C':
-                    t1 = al_load_bitmap("Sprites/B3.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B3.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'D':
-                    t1 = al_load_bitmap("Sprites/B4.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B4.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'E':
-                    t1 = al_load_bitmap("Sprites/B5.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B5.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'F':
-                    t1 = al_load_bitmap("Sprites/B6.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B6.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'G':
-                    t1 = al_load_bitmap("Sprites/B7.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B7.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'H':
-                    t1 = al_load_bitmap("Sprites/B8.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B8.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'I':
-                    t1 = al_load_bitmap("Sprites/B9.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B9.png");
+                    al_draw_bitmap(til,x,y,0);
                     break;
                 case 'J':
-                    t1 = al_load_bitmap("Sprites/B10.png");
-                    al_draw_bitmap(t1,x,y,0);
+                    til = al_load_bitmap("Sprites/B10.png");
+                    al_draw_bitmap(til,x,y,0);
+                    break;
+                default:
                     break;
             }
             x+=32;
@@ -94,9 +98,8 @@ void desenha_tijpil(){
 int main(){
 
    ALLEGRO_DISPLAY *display = NULL;
-   ALLEGRO_BITMAP* borda, *fundo;
-   borda = fundo = NULL;
-   pil = NULL;
+   ALLEGRO_BITMAP* borda, *fundo, *pilu, *tijo;
+   borda = fundo = pilu = tijo = NULL;
    pilulas p;
    tijolos t;
    /*
@@ -136,16 +139,17 @@ int main(){
         return -1;
    }
    al_draw_bitmap(borda,0,0,0);
-   pil = al_load_bitmap("Sprites/Candy.png");
-   desenha_tijpil();
    ///Fundo e Borda
+
+   desenha_tijpil(pilu,tijo); ///coloca sprites das pilulas e tijolos na tela.
    al_flip_display();
    al_rest(150.0); //Tempo que a tela fica ativa (em segundos)
-   al_destroy_display(display); //Destroi a tela
+   ///destroyers;
+   al_destroy_display(display);
    al_destroy_bitmap(borda);
    al_destroy_bitmap(fundo);
-   al_destroy_bitmap(pil);
-   al_destroy_bitmap(t1);
+   al_destroy_bitmap(pilu);
+   al_destroy_bitmap(tijo);
    return 0;
 }
 
