@@ -6,8 +6,8 @@
 #include <allegro5/allegro_acodec.h>
 #include "pacman.h"
 //Dimensões
-#define W  1366
-#define W2 768
+#define W  800
+#define W2 800
 //Dimensões
 using namespace std;
 
@@ -39,7 +39,7 @@ int main(){
       fprintf(stderr, "Falha na criação do display!\n");
       return -1;
    }
-   MAP = al_load_bitmap("Sprites/mapa.png");
+   MAP = al_load_bitmap("Sprites/borda.png");
    if(!MAP){
         al_show_native_message_box(display,"Erro!","Erro!","A imagem não pode ser carregada",NULL,ALLEGRO_MESSAGEBOX_ERROR);
         al_destroy_display(display); //destruindo ptr.
@@ -47,7 +47,7 @@ int main(){
    }
 
    al_clear_to_color(al_map_rgb(0,0,0)); //Cor de background da tela
-   al_draw_bitmap(MAP,200,0,0);
+   al_draw_bitmap(MAP,0,0,0);
    al_flip_display();
 
    al_rest(9.0); //Tempo que a tela fica ativa (em segundos)
