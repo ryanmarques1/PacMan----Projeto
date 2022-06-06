@@ -12,6 +12,7 @@
 #define columns 20
 //Dimensões
 using namespace std;
+
 char mapa[lines][columns] = {
 "PPPPPPPPPBPPPPPPPPP",
 "PFAEPGAEPCPFAHPFAEP",
@@ -23,9 +24,9 @@ char mapa[lines][columns] = {
 "PFAAAIPFAAAEPJAAAEP",
 "PPPPPP-------PPPPPP",
 "PGAEPD-GE-FH-DPFAHP",
-"PBPPPB-B---B-BPPPBP",
+"PBPPPB-B111B-BPPPBP",
 "PBPDPB-JAAAI-BPDPBP",
-"PBPBPB-------BPBPBP",
+"PBPBPB---0---BPBPBP",
 "PBPBPCPFAAAEPCPBPBP",
 "PBPBPPPPP-PPPPPBPBP",
 "PBPCPFAAAAAAAEPCPBP",
@@ -33,10 +34,10 @@ char mapa[lines][columns] = {
 "PCPFAAAAAAAAAAAEPCP",
 "PPPPPPPPPPPPPPPPPPP",
 };
-
-void desenha_tijpil(ALLEGRO_BITMAP *pil, ALLEGRO_BITMAP *til){
+/*
+void desenha_tijpil(ALLEGRO_BITMAP *pil, ALLEGRO_BITMAP *til, ALLEGRO_BITMAP *pac){
     int i,j, x = 32, y=32;
-    pil = til = NULL;
+    pil = til = pac = NULL;
     for(i = 0; i < lines; i++){
         for(j = 0; j < columns; j++){
             printf("%c ", mapa[i][j]);
@@ -94,12 +95,12 @@ void desenha_tijpil(ALLEGRO_BITMAP *pil, ALLEGRO_BITMAP *til){
         y +=32;
         cout << endl;
     }
-}
+}*/
 int main(){
 
    ALLEGRO_DISPLAY *display = NULL;
-   ALLEGRO_BITMAP* borda, *fundo, *pilu, *tijo;
-   borda = fundo = pilu = tijo = NULL;
+   ALLEGRO_BITMAP* borda, *fundo, *pilu, *tijo, *pacm;
+   borda = fundo = pilu = tijo = pacm = NULL;
    pilulas p;
    tijolos t;
    /*
@@ -128,20 +129,22 @@ int main(){
    fundo = al_load_bitmap("Sprites/Fundo.jpg");
    if(!fundo){
         al_show_native_message_box(display,"Erro!","Erro!","A imagem não pode ser carregada",NULL,ALLEGRO_MESSAGEBOX_ERROR);
-        al_destroy_display(display); //destruindo ptr.
+        al_destroy_display(display); //destruindo ptrdisplay.
         return -1;
    }
    al_draw_bitmap(fundo,0,0,0);
    borda = al_load_bitmap("Sprites/Borda.png");
    if(!borda){
         al_show_native_message_box(display,"Erro!","Erro!","A imagem não pode ser carregada",NULL,ALLEGRO_MESSAGEBOX_ERROR);
-        al_destroy_display(display); //destruindo ptr.
+        al_destroy_display(display); //destruindo ptrdisplay.
         return -1;
    }
    al_draw_bitmap(borda,0,0,0);
    ///Fundo e Borda
 
-   desenha_tijpil(pilu,tijo); ///coloca sprites das pilulas e tijolos na tela.
+   p.desenha_pilu(pilu);
+   t.desenha_tijo(tijo);
+   //desenha_tijpil(pilu,tijo,pacm); ///coloca sprites das pilulas e tijolos na tela.
    al_flip_display();
    al_rest(150.0); //Tempo que a tela fica ativa (em segundos)
    ///destroyers;

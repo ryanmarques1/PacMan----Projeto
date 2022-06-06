@@ -12,11 +12,11 @@ class tijolos{
         //~tijolos();
         ///Metodos;
        // int* create_tij();
-        void set_tij(int* ,int*);
-        int get_tij();
+       void set_tijo();
+       void desenha_tijo(ALLEGRO_BITMAP *);
     private:
-        ALLEGRO_BITMAP *tijo;
-        int tij[15][15];
+        ALLEGRO_BITMAP *til;
+        //char tij[20][20];
 };
 
 class pilulas{
@@ -26,10 +26,11 @@ class pilulas{
         //~pilulas();
         ///Metodos;
         //int* create_pil();
-        void set_pil(int*, int*);
-        int get_pil();
+        void set_pil();
+        //char** get_pil();
+        void desenha_pilu(ALLEGRO_BITMAP *);
     private:
         ALLEGRO_BITMAP *pilu;
-        int pil[15][15];
+        //char pil[20][20];
 };
 #endif // PACMAN_H_INCLUDED
