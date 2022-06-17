@@ -37,6 +37,8 @@
 			<Add directory="C:/allegro/include" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="moviment.cpp" />
+		<Unit filename="moviment.h" />
 		<Unit filename="pacman.cpp" />
 		<Unit filename="pacman.h" />
 		<Extensions />
