@@ -47,14 +47,14 @@ void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev){
     const int w2 = 672;
    // float x = 0, y = 0;
     if(ev.type == ALLEGRO_EVENT_TIMER){
-        printf("pos_x: %.2f pos_y: %.2f\n", x,y);
+       //printf("pos_x: %.2f pos_y: %.2f\n", x,y);
         if(tecla[KUP] && y >= 32.0)
             y -= tecla[KUP] + 5.0;
         if(tecla[KDOWN] && y <= w2 - 32.0 - 32.0)
             y+= tecla[KDOWN] + 5.0;
         if(tecla[KLEFT] && x >= 32.0)
             x-= tecla[KLEFT] + 5.0;
-        if(tecla[KRIGHT] && x <= w -32.0 - 32.0)
+        if(tecla[KRIGHT] && x <= w - 32.0 - 32.0)
             x+= tecla[KRIGHT] + 5.0;
     }
 }
@@ -72,7 +72,7 @@ void moviment_pac::movi_cima(ALLEGRO_BITMAP *cima, ALLEGRO_EVENT ev){
         "PGAEPD-GE1FH-DPFAHP",
         "PBPPPB-B111B-BPPPBP",
         "PBPDPB-JAAAI-BPDPBP",
-        "PBPBPB---0---BPBPBP",
+        "PBPBPB-------BPBPBP",
         "PBPBPCPFAAAEPCPBPBP",
         "PBPBPPPPP-PPPPPBPBP",
         "PBPCPFAAAAAAAEPCPBP",
@@ -92,6 +92,7 @@ void moviment_pac::movi_cima(ALLEGRO_BITMAP *cima, ALLEGRO_EVENT ev){
                     if(!cima)
                         exit(-1);
                     al_draw_bitmap(cima,a,b,0);
+                    printf("%d %d\n", i ,j);
                 }
                 a+=32;
             }
@@ -142,6 +143,7 @@ void moviment_pac::movi_baixo(ALLEGRO_BITMAP *baixo, ALLEGRO_EVENT ev){
                 if(!baixo)
                     exit(-1);
                 al_draw_bitmap(baixo,a,b,0);
+                printf("%d %d\n", i ,j);
             }
             a+=32;
         }
@@ -192,6 +194,7 @@ void moviment_pac::movi_direita(ALLEGRO_BITMAP *direita, ALLEGRO_EVENT ev){
                     if(!direita)
                         exit(-1);
                     al_draw_bitmap(direita,a,b,0);
+                    printf("%d %d\n", i ,j);
                 }
                 a+=32;
             }
@@ -242,6 +245,7 @@ void moviment_pac::movi_esquerda(ALLEGRO_BITMAP *esquerda, ALLEGRO_EVENT ev){
                 if(!esquerda)
                     exit(-1);
                 al_draw_bitmap(esquerda,a,b,0);
+                printf("%d %d\n", i ,j);
             }
             a+=32;
         }

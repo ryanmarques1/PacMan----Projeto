@@ -17,5 +17,6 @@ class moviment_pac{
         ALLEGRO_BITMAP *movi;
         bool tecla[5];
         float x,y;
+
 };
 #endif // MOVIMENT_H_INCLUDED
