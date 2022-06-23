@@ -170,10 +170,12 @@ int main(){
    menu(texto);
    music = al_load_audio_stream("audios/samba_amigo.ogg",4,1030);
    music_menu(music);
-   int tempo; //sprite = 0, fator = 1;
+   int tempo, sprite = 0, fator = 1;
    bool test = true;
    bool re = false;
    al_flip_display();
+
+   //Inicio Game-----------------------------------------------------------------------------------------------------------------------
    while(!fim_loop){
         //printf("pos_x: %.2f pos_y: %.2f\n", posi_x,posi_y);
          tempo = al_get_timer_count(FPS);
@@ -181,12 +183,12 @@ int main(){
          al_wait_for_event(fila_events, &event);
         //qual evento
         if(event.type == ALLEGRO_EVENT_TIMER){
-            /*if(tempo == (fps*540)/1000){
+            if(tempo == (fps*540)/1000){
                 al_set_timer_count(FPS,0);
                 sprite = sprite + fator;
                 if(sprite == 0) fator = 1;
                 if(sprite == 4) fator = -1;
-            }*/
+            }
             movi.movimenta_personagem(event);
             test = true;
         }
@@ -203,8 +205,13 @@ int main(){
             al_flip_display();
             switch(event.keyboard.keycode){
                 case ALLEGRO_KEY_ENTER:
-                   teclas[KEY_ENTER] = true; ///quando apertado, vira true.
-                    al_destroy_audio_stream(music); ///musica do menu para.
+                    teclas[KEY_ENTER] = true; ///quando apertado, vira true.
+                    movi.startMap();
+//                    movi.TImprimir();
+                    if(music != NULL){
+                        al_destroy_audio_stream(music); ///musica do menu para.
+                        music = NULL;
+                    }
                     al_clear_to_color(al_map_rgb(0,0,0));
                     al_draw_bitmap(fundo,0,0,0);
                     al_draw_bitmap(borda,0,0,0);
@@ -218,9 +225,18 @@ int main(){
             } //se o evento é algo relacionado a alguma tecla apertada
         }else if(event.type == ALLEGRO_EVENT_KEY_UP){
             switch(event.keyboard.keycode){
-            case ALLEGRO_KEY_ENTER:
-                teclas[KEY_ENTER]  = false;
-                break;
+                case ALLEGRO_KEY_RIGHT:
+                    teclas[KRIGHT] = false;
+                    break;
+                case ALLEGRO_KEY_LEFT:
+                    teclas[KLEFT] = false;
+                    break;
+                case ALLEGRO_KEY_UP:
+                    teclas[KUP] = false;
+                    break;
+                case ALLEGRO_KEY_DOWN:
+                    teclas[KDOWN] = false;
+                    break;
                 default:
                     break;
             }
