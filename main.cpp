@@ -114,7 +114,8 @@ int main(){
    bool fim_loop = false; ///para o loop de eventos
    bool teclas[5] = {false,false,false,false,false}; ///teclas;
    int aux = 0;
-   float posi_x = 0, posi_y = 0;
+   float posi_x = 32, posi_y = 32;
+   int x =32, y = 32;
    pilulas p;
    tijolos t;
    personagem pp;
@@ -174,7 +175,7 @@ int main(){
    bool test = true;
    bool re = false;
    al_flip_display();
-
+   pacm = al_load_bitmap("Sprites/Personagens/Voltorb/Volt.png");
    //Inicio Game-----------------------------------------------------------------------------------------------------------------------
    while(!fim_loop){
         //printf("pos_x: %.2f pos_y: %.2f\n", posi_x,posi_y);
@@ -183,31 +184,31 @@ int main(){
          al_wait_for_event(fila_events, &event);
         //qual evento
         if(event.type == ALLEGRO_EVENT_TIMER){
-            if(tempo == (fps*540)/1000){
+            if(tempo == (fps*200)/1000){
                 al_set_timer_count(FPS,0);
                 sprite = sprite + fator;
                 if(sprite == 0) fator = 1;
                 if(sprite == 4) fator = -1;
             }
-            movi.movimenta_personagem(event);
+            //movi.movimenta_personagem(event,&x,&y);
             test = true;
         }
-
         if(event.type == ALLEGRO_EVENT_KEY_DOWN){
-            pacm = al_load_bitmap("Sprites/Personagens/Voltorb/VoltorbD.png");
+            /*pacm = al_load_bitmap("Sprites/Personagens/Voltorb/VoltorbD.png");
             movi.movi_direita(pacm,event);
             pacm = al_load_bitmap("Sprites/Personagens/Voltorb/VoltorbE.png");
             movi.movi_esquerda(pacm,event);
             pacm = al_load_bitmap("Sprites/Personagens/Voltorb/VoltorbB.png");
             movi.movi_cima(pacm,event);
             pacm = al_load_bitmap("Sprites/Personagens/Voltorb/VoltorbF1.png");
-            movi.movi_baixo(pacm,event);
+            movi.movi_baixo(pacm,event);*/
+           movi.direcao_personagem(event,pacm,&x,&y);
             al_flip_display();
             switch(event.keyboard.keycode){
                 case ALLEGRO_KEY_ENTER:
                     teclas[KEY_ENTER] = true; ///quando apertado, vira true.
                     movi.startMap();
-//                    movi.TImprimir();
+//                  movi.TImprimir();
                     if(music != NULL){
                         al_destroy_audio_stream(music); ///musica do menu para.
                         music = NULL;
@@ -217,29 +218,12 @@ int main(){
                     al_draw_bitmap(borda,0,0,0);
                     p.desenha_pilu(pilu);
                     t.desenha_tijo(tijo);
-                    pacm = al_load_bitmap("Sprites/Personagens/Voltorb/VoltorbF.png");
-                    pp.desenha_pacm(pacm);
+                    movi.teste_pac(pacm, &posi_x, &posi_y);
+                    re = true;
                     break;
                 default:
                     break;
             } //se o evento é algo relacionado a alguma tecla apertada
-        }else if(event.type == ALLEGRO_EVENT_KEY_UP){
-            switch(event.keyboard.keycode){
-                case ALLEGRO_KEY_RIGHT:
-                    teclas[KRIGHT] = false;
-                    break;
-                case ALLEGRO_KEY_LEFT:
-                    teclas[KLEFT] = false;
-                    break;
-                case ALLEGRO_KEY_UP:
-                    teclas[KUP] = false;
-                    break;
-                case ALLEGRO_KEY_DOWN:
-                    teclas[KDOWN] = false;
-                    break;
-                default:
-                    break;
-            }
         }
         else if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
             fim_loop = true; ///clicando com no X;
@@ -249,8 +233,14 @@ int main(){
            //al_draw_bitmap(pacm,posi_x,posi_y,0);
           //al_draw_bitmap(pacm,posi_x,posi_y,0);
           //al_clear_to_color(al_map_rgb(255,255,255));
+          if(re){
+            movi.direcao_personagem(event,pacm,&x,&y);
+            movi.startMap();
+          }
           al_flip_display();
+
         }
+       //al_destroy_bitmap(pacm);
    }
 
 
