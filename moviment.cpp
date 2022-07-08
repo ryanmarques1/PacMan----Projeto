@@ -32,69 +32,9 @@ moviment_pac::moviment_pac(){
     for(int i = 0; i < 5; i++){
         tecla[i]=false;
     }
-    //x = y = 0;
-    Map[20][20] = ' ';
     points = 0;
+    movi = NULL;
 }
-
-/*moviment_pac::~moviment_pac(){
-    cout << "\ndestrutor moviment\n";
-   //al_destroy_bitmap(movi);
-}*/
-
-char moviment_pac::startMap(char mapa[][20]){
-    char Aux[20][20] ={
-        "PPPPPPPPPBPPPPPPPPP",
-        "PFAEPGAEPCPFAHPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAEPBPDPDPDPBPFAEP",
-        "PPPPPBPBPBPBPBPPPPP",
-        "PFAEPBPCPCPCPBPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAAAIPFAAAEPJAAAEP",
-        "PPPPPP-------PPPPPP",
-        "PGAEPD-GE1FH-DPFAHP",
-        "PBPPPB-B111B-BPPPBP",
-        "PBPDPB-JAAAI-BPDPBP",
-        "PBPBPB-------BPBPBP",
-        "PBPBPCPFAAAEPCPBPBP",
-        "PBPBPPPPP0PPPPPBPBP",
-        "PBPCPFAAAAAAAEPCPBP",
-        "PBPPPPPPPPPPPPPPPBP",
-        "PCPFAAAAAAAAAAAEPCP",
-        "PPPPPPPPPPPPPPPPPPP",
-    };
-    int i,j;
-    for(i = 0 ; i < 20; i++){
-        for(j = 0; j < 20; j++){
-            Map[i][j] = Aux [i][j];
-        }
-    }
-    return Map[20][20];
-}
-
-////Teste para Imprimir
-//void moviment_pac::TImprimir(){
-//    int i,j;
-//    for(i = 0 ; i < 20; i++){
-//        for(j = 0; j < 20; j++){
-//            printf("%c ",Map[i][j]);
-//        }
-//        printf("\n");
-//    }
-//}
-
-
-//void moviment_pac::teste_pac(ALLEGRO_BITMAP* movi, int a , int b){
-//    if(!movi){
-//        exit(-1);
-//    }
-//    al_draw_bitmap_region(movi,0,0,32,32,a,b,0);
-//    cout << a << endl << b << endl << "-" << endl;
-//    desenha(movi,&a,&b);
-//    break;
-//
-//}
 
 /*
 colisão ->
@@ -149,24 +89,8 @@ void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev){
                 break;
         }
     }
-//    else if(ev.type == ALLEGRO_EVENT_KEY_UP){
-//        switch(ev.keyboard.keycode){
-//            case ALLEGRO_KEY_RIGHT:
-//                tecla[KRIGHT] = false;
-//                break;
-//            case ALLEGRO_KEY_LEFT:
-//                tecla[KLEFT] = false;
-//                break;
-//            case ALLEGRO_KEY_UP:
-//                tecla[KUP] = false;
-//                break;
-//            case ALLEGRO_KEY_DOWN:
-//                tecla[KDOWN] = false;
-//                break;
-//        }
-//    }
 }
-void moviment_pac::mov_pac(ALLEGRO_BITMAP* movi,int* x, int* y,int *spr){
+void moviment_pac::mov_pac(int* x, int* y,int *spr){
     if(tecla[KUP] == true){
         *spr = 2;
         if(*y-32 >= 32){
@@ -178,22 +102,27 @@ void moviment_pac::mov_pac(ALLEGRO_BITMAP* movi,int* x, int* y,int *spr){
         if(*y+32 <= 608){
             *y+=32;
         }
-//        al_draw_bitmap_region(movi,0,4*32,32,32,*x,*y,0);
     }else
     if(tecla[KRIGHT] == true){
         *spr = 3;
         if(*x+32 <= 608){
             *x+=32;
         }
-//        al_draw_bitmap_region(movi,0,3*32,32,32,*x,*y,0);
     }else
     if(tecla[KLEFT] == true){
         *spr = 1;
         if(*x-32 >= 32){
             *x-=32;
         }
-//        al_draw_bitmap_region(movi,0,1*32,32,32,*x,*y,0);
     }
+}
+void moviment_pac::desenha(int* x, int* y, int* spr){
+    movi = al_load_bitmap("Sprites/Personagens/Voltorb/Volt.png");
+    if(!movi)exit(-1);
+    al_draw_bitmap_region(movi,0,*spr*32,32,32,*x,*y,0);
+}
+void moviment_pac::destroi_pac(){
+    al_destroy_bitmap(this->movi);
 }
 void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
     if(ev.type == ALLEGRO_EVENT_TIMER){
@@ -207,13 +136,24 @@ void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
             *x-=32;
     }
 }
-void moviment_pac::pontuacao(int*x,int*y){
-    if(this->Map[*x][*y] == 'P'){
-        this->points+=25;
-        this->Map[*x][*y] = '-';
-    }
 
+void moviment_pac::pontuacao(int y,int x,char **Map){
+    if(Map[x][y] == 'P'){
+        this->points+=25;
+//        cout << "Letra = " << Map[x][y] << endl;
+//        cout << "Pos x = " << x << endl;
+//        cout << "Pos y = " << y << endl;
+//        for(int i = 0 ; i < 20; i++){
+//            for(int j = 0; j < 20; j++){
+//                cout << Map[i][j];
+//            }
+//            cout << endl;
+//        }
+        Map[x][y] = '-';
+    }
+//    cout << this->points << endl;
 }
+
 bool moviment_pac::colisao(int x,int y,int x2,int y2, int bx,int by,int bx2,int by2){
     if(x > bx2) return false;
     if(x2 < bx) return false;

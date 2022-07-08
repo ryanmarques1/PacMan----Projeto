@@ -22,7 +22,8 @@ class tijolos{
         //~tijolos();
         ///Metodos;
         //void set_tijo();
-       void desenha_tijo(ALLEGRO_BITMAP *);
+       void desenha_tijo(char**);
+       void destroi_tijo();
     private:
         ALLEGRO_BITMAP *til;
 
@@ -32,10 +33,11 @@ class pilulas{
     public:
         pilulas();
         //pilulas(ALLEGRO_BITMAP*);
-        //~pilulas();
+       // ~pilulas();
+
         ///Metodos;
-        //void set_pil();
-        void desenha_pilu(ALLEGRO_BITMAP *);
+        void desenha_pilu(char**);
+        void destroi_pilu();
     private:
         ALLEGRO_BITMAP *pilu;
 

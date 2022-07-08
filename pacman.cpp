@@ -34,80 +34,40 @@ tijolos::tijolos(){
 pilulas::pilulas(){
     cout << "\nconstrutor padrao\n";
     pilu = NULL;
+
 }
 
 /*tijolos::~tijolos(){
     exit(0);
 }
-pilulas::~pilulas(){
-    exit(0);
+*/
+/*pilulas::~pilulas(){
+    al_destroy_bitmap(pilu);
 }*/
-void pilulas::desenha_pilu(ALLEGRO_BITMAP * ptrP){
-    char aux[20][20] = {
-        "PPPPPPPPPBPPPPPPPPP",
-        "PFAEPGAEPCPFAHPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAEPBPDPDPDPBPFAEP",
-        "PPPPPBPBPBPBPBPPPPP",
-        "PFAEPBPCPCPCPBPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAAAIPFAAAEPJAAAEP",
-        "PPPPPP-------PPPPPP",
-        "PGAEPD-GE-FH-DPFAHP",
-        "PBPPPB-B---B-BPPPBP",
-        "PBPDPB-JAAAI-BPDPBP",
-        "PBPBPB-------BPBPBP",
-        "PBPBPCPFAAAEPCPBPBP",
-        "PBPBPPPPP-PPPPPBPBP",
-        "PBPCPFAAAAAAAEPCPBP",
-        "PBPPPPPPPPPPPPPPPBP",
-        "PCPFAAAAAAAAAAAEPCP",
-        "PPPPPPPPPPPPPPPPPPP",
-    };
-    int i,j,ac=0;
+void pilulas::desenha_pilu(char **aux){ ///196 Doces
+    int i,j;
     float x=32,y=32;
     for(i = 0 ; i < 20; i++){
         for(j = 0; j < 20; j++){
             if(aux[i][j] == 'P'){
-                    ac++;
                 pilu = al_load_bitmap("Sprites/Candy.png");
                  if(!pilu){
                     al_show_native_message_box(al_get_current_display(),"Erro!","Erro!","A imagem não pode ser carregada",NULL,ALLEGRO_MESSAGEBOX_ERROR);
                     exit(-1);
                 }
                 al_draw_bitmap(pilu,x,y,0);
-                pilu = ptrP;
+
             }
             x+=32;
         }
         x = 32;
         y+=32;
     }
-    cout << ac << endl;
 }
-
-void tijolos::desenha_tijo(ALLEGRO_BITMAP * ptrT){
-    char aux[20][20] = {
-        "PPPPPPPPPBPPPPPPPPP",
-        "PFAEPGAEPCPFAHPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAEPBPDPDPDPBPFAEP",
-        "PPPPPBPBPBPBPBPPPPP",
-        "PFAEPBPCPCPCPBPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAAAIPFAAAEPJAAAEP",
-        "PPPPPP-------PPPPPP",
-        "PGAEPD-GE1FH-DPFAHP",
-        "PBPPPB-B111B-BPPPBP",
-        "PBPDPB-JAAAI-BPDPBP",
-        "PBPBPB---0---BPBPBP",
-        "PBPBPCPFAAAEPCPBPBP",
-        "PBPBPPPPP-PPPPPBPBP",
-        "PBPCPFAAAAAAAEPCPBP",
-        "PBPPPPPPPPPPPPPPPBP",
-        "PCPFAAAAAAAAAAAEPCP",
-        "PPPPPPPPPPPPPPPPPPP",
-    };
+void pilulas::destroi_pilu(){
+    al_destroy_bitmap(this->pilu);
+}
+void tijolos::desenha_tijo(char **aux){
     int i, j;
     float x = 32, y = 32;
     for(i = 0; i < 20; i++){
@@ -175,4 +135,6 @@ void tijolos::desenha_tijo(ALLEGRO_BITMAP * ptrT){
     }
 }
 
-
+void tijolos::destroi_tijo(){
+    al_destroy_bitmap(this->til);
+}
