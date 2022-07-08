@@ -29,9 +29,12 @@ enum keys_board{
 };
 moviment_pac::moviment_pac(){
     cout << "\nconstrutor padrão\n";
-    tecla[4] = {false};
+    for(int i = 0; i < 5; i++){
+        tecla[i]=false;
+    }
     //x = y = 0;
     Map[20][20] = ' ';
+    points = 0;
 }
 
 /*moviment_pac::~moviment_pac(){
@@ -82,22 +85,16 @@ char moviment_pac::startMap(char mapa[][20]){
 //}
 
 
-void moviment_pac::teste_pac(ALLEGRO_BITMAP* movi, int *a , int *b){
-    int i , j;
-    for(i = 0; i < 20; i++){
-        for(j = 0; j < 20; j++){
-            if(Map[i][j] == '0'){
-                if(!movi)
-                    exit(-1);
-                al_draw_bitmap_region(movi,0,0,32,32,*a,*b,0);
-            }
-            *a+=32;
-        }
-        *a = 32;
-        *b+=32;
-
-    }
-}
+//void moviment_pac::teste_pac(ALLEGRO_BITMAP* movi, int a , int b){
+//    if(!movi){
+//        exit(-1);
+//    }
+//    al_draw_bitmap_region(movi,0,0,32,32,a,b,0);
+//    cout << a << endl << b << endl << "-" << endl;
+//    desenha(movi,&a,&b);
+//    break;
+//
+//}
 
 /*
 colisão ->
@@ -123,62 +120,80 @@ if(!(x1>x2 + largura bitmap) || (y1>y2 + altura bitmap) || (x2 > x1 + largura) |
 cima = max entre y1 y2
 
 */
-void moviment_pac::desenha(ALLEGRO_BITMAP* movi,int* x, int* y){
-    int spr = 0;
-    if(tecla[KUP] == true){
-        spr = 2;
-        al_draw_bitmap_region(movi,0,2*32,32,32,*x,*y,0);
-    }
-    if(tecla[KDOWN] == true){
-        spr = 4 ;
-       // al_draw_bitmap_region(movi,0,4*32,32,32,*x,*y,0);
-    }
-    if(tecla[KRIGHT] == true){
-        spr = 3;
-      //  al_draw_bitmap_region(movi,0,3*32,32,32,*x,*y,0);
-    }
-    if(tecla[KLEFT] == true){
-        spr = 1;
-        //al_draw_bitmap_region(movi,0,1*32,32,32,*x,*y,0);
-    }
-
-}
-void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, int *x,int *y){
+void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev){
      if(ev.type == ALLEGRO_EVENT_KEY_DOWN){
         switch(ev.keyboard.keycode){
             case ALLEGRO_KEY_UP:
                 tecla[KUP] = true;
+                tecla[KLEFT] = false;
+                tecla[KDOWN] = false;
+                tecla[KRIGHT] = false;
                 break;
             case ALLEGRO_KEY_DOWN:
                 tecla[KDOWN] = true;
-
+                tecla[KLEFT] = false;
+                tecla[KUP] = false;
+                tecla[KRIGHT] = false;
                 break;
             case ALLEGRO_KEY_RIGHT:
                 tecla[KRIGHT] = true;
+                tecla[KLEFT] = false;
+                tecla[KUP] = false;
+                tecla[KDOWN] = false;
                 break;
             case ALLEGRO_KEY_LEFT:
                 tecla[KLEFT] = true;
+                tecla[KRIGHT] = false;
+                tecla[KUP] = false;
+                tecla[KDOWN] = false;
                 break;
         }
-        //al_draw_bitmap_region(movi,0,sprite*32,32,32,*x,*y,0);
-        //al_flip_display();
     }
-    else if(ev.type == ALLEGRO_EVENT_KEY_UP){
-            switch(ev.keyboard.keycode){
-                case ALLEGRO_KEY_RIGHT:
-                    tecla[KRIGHT] = false;
-                    break;
-                case ALLEGRO_KEY_LEFT:
-                    tecla[KLEFT] = false;
-                    break;
-                case ALLEGRO_KEY_UP:
-                    tecla[KUP] = false;
-                    break;
-                case ALLEGRO_KEY_DOWN:
-                    tecla[KDOWN] = false;
-                    break;
-            }
+//    else if(ev.type == ALLEGRO_EVENT_KEY_UP){
+//        switch(ev.keyboard.keycode){
+//            case ALLEGRO_KEY_RIGHT:
+//                tecla[KRIGHT] = false;
+//                break;
+//            case ALLEGRO_KEY_LEFT:
+//                tecla[KLEFT] = false;
+//                break;
+//            case ALLEGRO_KEY_UP:
+//                tecla[KUP] = false;
+//                break;
+//            case ALLEGRO_KEY_DOWN:
+//                tecla[KDOWN] = false;
+//                break;
+//        }
+//    }
+}
+void moviment_pac::mov_pac(ALLEGRO_BITMAP* movi,int* x, int* y,int *spr){
+    if(tecla[KUP] == true){
+        *spr = 2;
+        if(*y-32 >= 32){
+            *y-=32;
         }
+    }else
+    if(tecla[KDOWN] == true){
+        *spr = 4 ;
+        if(*y+32 <= 608){
+            *y+=32;
+        }
+//        al_draw_bitmap_region(movi,0,4*32,32,32,*x,*y,0);
+    }else
+    if(tecla[KRIGHT] == true){
+        *spr = 3;
+        if(*x+32 <= 608){
+            *x+=32;
+        }
+//        al_draw_bitmap_region(movi,0,3*32,32,32,*x,*y,0);
+    }else
+    if(tecla[KLEFT] == true){
+        *spr = 1;
+        if(*x-32 >= 32){
+            *x-=32;
+        }
+//        al_draw_bitmap_region(movi,0,1*32,32,32,*x,*y,0);
+    }
 }
 void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
     if(ev.type == ALLEGRO_EVENT_TIMER){
@@ -192,10 +207,10 @@ void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
             *x-=32;
     }
 }
-void moviment_pac::conta_pilulas(int*x,int*y){
-    int pontos = 0;
-    if(Map[*x][*y] == 'P'){
-            pontos++;
+void moviment_pac::pontuacao(int*x,int*y){
+    if(this->Map[*x][*y] == 'P'){
+        this->points+=25;
+        this->Map[*x][*y] = '-';
     }
 
 }

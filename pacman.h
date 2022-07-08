@@ -40,15 +40,4 @@ class pilulas{
         ALLEGRO_BITMAP *pilu;
 
 };
-
-class personagem{
-    public:
-        personagem();
-        personagem(ALLEGRO_BITMAP*);
-        //~personagem();
-        ///Metodos
-        void desenha_pacm(ALLEGRO_BITMAP *);
-    private:
-        ALLEGRO_BITMAP *pacm;
-};
 #endif // PACMAN_H_INCLUDED

@@ -26,8 +26,8 @@ e nesse aqui também, https://www.allegro.cc/forums/thread/220924/220927
 ///Grupo : Ryan Marques de Castro, Mariana de Deus Castro e Bernardo Teixeira de Miranda INTEGRAL.
 
 //Dimensões
-#define W  672
-#define W2 900
+#define W  900
+#define W2 672
 #define lines 20
 #define columns 20
 
@@ -92,7 +92,7 @@ int main(){
 
    ALLEGRO_DISPLAY *display = NULL;
    ALLEGRO_BITMAP* borda, *fundo, *pilu, *tijo, *pacm, *pacm2;
-   borda = fundo = pilu = tijo = pacm = pacm2 =NULL;
+   borda = fundo = pilu = tijo = pacm = pacm2 = NULL;
    ALLEGRO_EVENT_QUEUE *fila_events = NULL; ///ponteiro para fila de eventos
    ALLEGRO_TIMER *FPS = NULL; ///ptr timer;
    ALLEGRO_FONT *texto = NULL; ///ptr para texto;
@@ -101,12 +101,10 @@ int main(){
    ///ponteiros de audio e som
    bool fim_loop = false; ///para o loop de eventos
    bool teclas[2] = {false,false}; ///teclas;
-   int posi_x = 0, posi_y = 0, sprite = 0;
-   int x = 0, y = 0;
+   int posi_x = 320, posi_y = 480, sprite = 0,spr = 4;
    int frame;
    pilulas p;
    tijolos t;
-   personagem pp;
    moviment_pac movi;
    if(!al_init()) {
       fprintf(stderr, "Falha ao iniciar o allegro!\n");
@@ -149,90 +147,64 @@ int main(){
    }
    ///Fundo e Borda
 
-   ///fila de eventos para a movimentação
-   fila_events = al_create_event_queue();
-   ///registrando quais tipos de eventos terá
-   al_register_event_source(fila_events, al_get_keyboard_event_source()); ///pegando eventos dos teclados ->
-   al_register_event_source(fila_events, al_get_display_event_source(display)); ///pegandoe eventos do display.
-   al_register_event_source(fila_events, al_get_timer_event_source(FPS)); ///registrando o temporizador na fila de eventos
-   al_flip_display();
-   al_start_timer(FPS);
-   texto = al_load_font("Fonts/04B_30__.ttf", 30, NULL);
-   menu(texto);
-   //music = al_load_audio_stream("audios/samba_amigo.ogg",4,1030);
-   //music_menu(music);
-   bool test = false;
-   bool re = false;
-   ALLEGRO_EVENT event;  //variavel que receberá o evento atual.
-   //al_set_target_bitmap(pacm);
-   //al_set_target_bitmap(al_get_backbuffer(display));
-   //Inicio Game-----------------------------------------------------------------------------------------------------------------------
-   while(!fim_loop){
-
-        //printf("pos_x: %.2f pos_y: %.2f\n", posi_x,posi_y);
-         frame = al_get_timer_count(FPS);
-         al_wait_for_event(fila_events, &event);
+    ///fila de eventos para a movimentação
+    fila_events = al_create_event_queue();
+    ///registrando quais tipos de eventos terá
+    al_register_event_source(fila_events, al_get_keyboard_event_source()); ///pegando eventos dos teclados ->
+    al_register_event_source(fila_events, al_get_display_event_source(display)); ///pegandoe eventos do display.
+    al_register_event_source(fila_events, al_get_timer_event_source(FPS)); ///registrando o temporizador na fila de eventos
+    al_flip_display();
+    al_start_timer(FPS);
+    texto = al_load_font("Fonts/04B_30__.ttf", 30, NULL);
+    //   menu(texto);
+    //music = al_load_audio_stream("audios/samba_amigo.ogg",4,1030);
+    //music_menu(music);
+    bool test = false;
+    bool re = false;
+    ALLEGRO_EVENT event;  //variavel que receberá o evento atual.
+    //al_set_target_bitmap(pacm);
+    //al_set_target_bitmap(al_get_backbuffer(display));
+    //Inicio Game-----------------------------------------------------------------------------------------------------------------------
+    while(!fim_loop){
+        test = true;
+        frame = al_get_timer_count(FPS);
+        al_wait_for_event(fila_events, &event);
         //qual evento
-        if(event.type == ALLEGRO_EVENT_TIMER){
-            //movi.movimenta_personagem(&posi_x,&posi_y)
-             movi.movimenta_personagem(event,&posi_x,&posi_y);
-
-        }
-       else if(event.type == ALLEGRO_EVENT_KEY_DOWN){
-            //movi.conta_pilulas(&x,&y);
-            movi.direcao_personagem(event,&posi_x,&posi_y);
-            switch(event.keyboard.keycode){
-                case ALLEGRO_KEY_ENTER:
-                    teclas[KEY_ENTER] = true; ///quando apertado, vira true.
-                    test = true;
-                    movi.startMap(mapa);
-                    if(music != NULL){
-                        al_destroy_audio_stream(music); ///musica do menu para.
-                        music = NULL;
-                    }
-                    al_clear_to_color(al_map_rgb(0,0,0));
-                    al_draw_bitmap(fundo,0,0,0);
-                    al_draw_bitmap(borda,0,0,0);
-                    p.desenha_pilu(pilu);
-                    t.desenha_tijo(tijo);
-
-                    menu_pontos(texto);
-                    break;
-                default:
-                    break;
-            } //se o evento é algo relacionado a alguma tecla apertada
-        }else if(event.type == ALLEGRO_EVENT_KEY_UP){
-            if(teclas[KEY_ENTER]== true)
-                teclas[KEY_ENTER] = false;
-        }
-        else if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+        if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
             fim_loop = true; ///clicando com no X;
+        }else{
+            movi.direcao_personagem(event);
+            if(test && al_is_event_queue_empty(fila_events)){ // Redesenha
+                al_clear_to_color(al_map_rgb(0,0,0));
+                al_draw_bitmap(fundo,0,0,0);
+                al_draw_bitmap(borda,0,0,0);
+                p.desenha_pilu(pilu);
+                t.desenha_tijo(tijo);
+                cout << "Spr = " << spr << endl;
+                movi.mov_pac(pacm,&posi_x,&posi_y,&spr);
+                cout << "Spr = " << spr << endl;
+                al_draw_bitmap_region(pacm,0,spr*32,32,32,posi_x,posi_y,0);
+        //        menu_pontos(texto);
 
+            }
         }
-         if(test && al_is_event_queue_empty(fila_events)){
-          test = false;
-          al_clear_to_color(al_map_rgb(0,0,0));
-        }
-        al_draw_bitmap(fundo,0,0,0);
-        al_draw_bitmap(borda,0,0,0);
-        p.desenha_pilu(pilu);
-        t.desenha_tijo(tijo);
-       movi.desenha(pacm,&posi_x,&posi_y);
-        menu_pontos(texto);
+//        cout << "Pos x = " << posi_x << endl;
+//        cout << "Pos y = " << posi_y << endl;
+//        cout << "Spr = " << spr << endl;
         al_flip_display();
 
-   }
-   ///destroyers;
-   al_destroy_display(display);
-   al_destroy_bitmap(borda);
-   al_destroy_bitmap(fundo);
-   al_destroy_bitmap(pilu);
-   al_destroy_bitmap(tijo);
-   al_destroy_bitmap(pacm);
-   al_destroy_event_queue(fila_events);
-   al_destroy_timer(FPS);
-   al_destroy_font(texto);
-   return 0;
+    }
+    ///destroyers;
+    al_destroy_display(display);
+    al_destroy_bitmap(borda);
+    al_destroy_bitmap(fundo);
+    al_destroy_bitmap(pilu);
+    al_destroy_bitmap(tijo);
+    al_destroy_bitmap(pacm);
+    al_destroy_event_queue(fila_events);
+    al_destroy_timer(FPS);
+    al_destroy_font(texto);
+    return 0;
 }
 ///- = vazio, P = pilula.
 /*
@@ -249,24 +221,3 @@ I -> B9
 J -> B10
 */
 
-/*int mapa[lines][columns] = {
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-};*/

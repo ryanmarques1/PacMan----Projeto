@@ -35,15 +35,7 @@ pilulas::pilulas(){
     cout << "\nconstrutor padrao\n";
     pilu = NULL;
 }
-personagem::personagem(){
-    cout << "\nconstrutor padrao\n";
-    pacm = NULL;
-}
-personagem::personagem(ALLEGRO_BITMAP *ptrP){
-    cout << "\nconstrutor normal\n";
-    pacm = al_load_bitmap("Sprites/Personagens/Voltorb/VoltorbF.png");
-    pacm = ptrP;
-}
+
 /*tijolos::~tijolos(){
     exit(0);
 }
@@ -72,11 +64,12 @@ void pilulas::desenha_pilu(ALLEGRO_BITMAP * ptrP){
         "PCPFAAAAAAAAAAAEPCP",
         "PPPPPPPPPPPPPPPPPPP",
     };
-    int i,j;
+    int i,j,ac=0;
     float x=32,y=32;
     for(i = 0 ; i < 20; i++){
         for(j = 0; j < 20; j++){
             if(aux[i][j] == 'P'){
+                    ac++;
                 pilu = al_load_bitmap("Sprites/Candy.png");
                  if(!pilu){
                     al_show_native_message_box(al_get_current_display(),"Erro!","Erro!","A imagem não pode ser carregada",NULL,ALLEGRO_MESSAGEBOX_ERROR);
@@ -90,6 +83,7 @@ void pilulas::desenha_pilu(ALLEGRO_BITMAP * ptrP){
         x = 32;
         y+=32;
     }
+    cout << ac << endl;
 }
 
 void tijolos::desenha_tijo(ALLEGRO_BITMAP * ptrT){
@@ -180,45 +174,5 @@ void tijolos::desenha_tijo(ALLEGRO_BITMAP * ptrT){
         y+=32;
     }
 }
-void personagem::desenha_pacm(ALLEGRO_BITMAP *p){
-    int i,j;
-    float a = 32 , b = 32;
-    char aux[20][20] = {
-        "PPPPPPPPPBPPPPPPPPP",
-        "PFAEPGAEPCPFAHPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAEPBPDPDPDPBPFAEP",
-        "PPPPPBPBPBPBPBPPPPP",
-        "PFAEPBPCPCPCPBPFAEP",
-        "PPPPPBPPPPPPPBPPPPP",
-        "PFAAAIPFAAAEPJAAAEP",
-        "PPPPPP-------PPPPPP",
-        "PGAEPD-GE1FH-DPFAHP",
-        "PBPPPB-B111B-BPPPBP",
-        "PBPDPB-JAAAI-BPDPBP",
-        "PBPBPB---0---BPBPBP",
-        "PBPBPCPFAAAEPCPBPBP",
-        "PBPBPPPPP-PPPPPBPBP",
-        "PBPCPFAAAAAAAEPCPBP",
-        "PBPPPPPPPPPPPPPPPBP",
-        "PCPFAAAAAAAAAAAEPCP",
-        "PPPPPPPPPPPPPPPPPPP",
-    };
-    for(i = 0; i < 20; i++){
-        for(j = 0; j < 20; j++){
-            if(aux[i][j] == '0'){
-                if(!p){
-                    al_show_native_message_box(al_get_current_display(), "Erro!", "Erro!", "Erro ao carregar a imagem", NULL,ALLEGRO_MESSAGEBOX_ERROR);
-                    exit(-1);
-                }
-                //al_draw_bitmap_region(p,0,0,900,672,x,y,0);
-                al_draw_bitmap(p,a,b,0);
-                //12x9printf("%d %d ", i, j);
-            }
-            a+=32;
-        }
-        a = 32;
-        b+=32;
-    }
-}
+
 
