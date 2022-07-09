@@ -7,7 +7,7 @@
 class moviment_pac{
     public:
         moviment_pac();
-//        ~moviment_pac();
+       ~moviment_pac();
 
         char startMap(char [][20]);
         void TImprimir();
@@ -15,7 +15,6 @@ class moviment_pac{
         bool colisao(int,int,int,int,int,int,int,int);
         void mov_pac(int*, int*,int*);
         void desenha(int*,int*,int*);
-        void destroi_pac();
         void direcao_personagem(ALLEGRO_EVENT);
         void pontuacao(int,int,char**);
 

@@ -1,7 +1,7 @@
 #ifndef ENEMIES_H_INCLUDED
 #define ENEMIES_H_INCLUDED
 
-#include <bits/stdc++.h>
+#include <iostream>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -17,10 +17,10 @@ class inimigos{
     public:
         inimigos();
         inimigos(ALLEGRO_BITMAP*);
-        ~inimigos();
+        //~inimigos();
 
         void desenha_inimigos(ALLEGRO_BITMAP*);
-        ALLEGRO_BITMAP* retorna_inimigos();
+        void movimenta();
     private:
         ALLEGRO_BITMAP* inim;
 };

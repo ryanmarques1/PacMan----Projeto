@@ -1,6 +1,9 @@
-#include <bits/stdc++.h>
+#include <iostream>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include "pacman.h"
 #include "moviment.h"
 using namespace std;
@@ -34,8 +37,11 @@ moviment_pac::moviment_pac(){
     }
     points = 0;
     movi = NULL;
+    if (!movi) cout << "Certo\n";
 }
-
+moviment_pac::~moviment_pac(){
+    al_destroy_bitmap(this->movi);
+}
 /*
 colisão ->
 ter funções de max e min;
@@ -121,9 +127,7 @@ void moviment_pac::desenha(int* x, int* y, int* spr){
     if(!movi)exit(-1);
     al_draw_bitmap_region(movi,0,*spr*32,32,32,*x,*y,0);
 }
-void moviment_pac::destroi_pac(){
-    al_destroy_bitmap(this->movi);
-}
+
 void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
     if(ev.type == ALLEGRO_EVENT_TIMER){
         if(tecla[KUP] == true && *y >= 50)
@@ -138,8 +142,11 @@ void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
 }
 
 void moviment_pac::pontuacao(int y,int x,char **Map){
+    int w = 900, w2 = 672;
+    ALLEGRO_FONT* txt = al_load_font("Fonts/04B_30__.ttf", 21, 0);
+    al_draw_textf(txt, al_map_rgb(255, 0, 0), w - 128, w2 - 500, ALLEGRO_ALIGN_CENTER, "SCORE: %d", this->points);
     if(Map[x][y] == 'P'){
-        this->points+=25;
+        this->points += 25;
 //        cout << "Letra = " << Map[x][y] << endl;
 //        cout << "Pos x = " << x << endl;
 //        cout << "Pos y = " << y << endl;
@@ -151,14 +158,13 @@ void moviment_pac::pontuacao(int y,int x,char **Map){
 //        }
         Map[x][y] = '-';
     }
+    al_destroy_font(txt);
 //    cout << this->points << endl;
 }
-
 bool moviment_pac::colisao(int x,int y,int x2,int y2, int bx,int by,int bx2,int by2){
     if(x > bx2) return false;
     if(x2 < bx) return false;
     if(y > by2) return false;
     if(y2 < by) return false;
-
     return true;
 }
