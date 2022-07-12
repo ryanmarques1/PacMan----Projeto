@@ -1,6 +1,7 @@
 #include "pacman.h"
 #include "moviment.h"
 #include "enemies.h"
+#include <Windows.h>
 #include <iostream>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -163,8 +164,8 @@ int main(){
     //Inicio Game-----------------------------------------------------------------------------------------------------------------------
     while(!fim_loop){
         test = true;
-        frame = al_get_timer_count(FPS);
         al_wait_for_event(fila_events, &event);
+        frame = al_get_timer_count(FPS);
         //qual evento
         if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
             fim_loop = true; ///clicando com no X;
@@ -181,7 +182,7 @@ int main(){
                 al_draw_bitmap(borda,0,0,0);
                 p.desenha_pilu(MapaMain);
                 t.desenha_tijo(MapaMain);
-                movi.mov_pac(&posi_x,&posi_y,&spr);
+                movi.mov_pac(&posi_x,&posi_y,&spr,MapaMain);
                 movi.desenha(&posi_x,&posi_y,&spr);
                 ///redesenha
 //              cout << "Pos x = " << posi_x << endl;
@@ -196,8 +197,9 @@ int main(){
 //        cout << "Pos x = " << posi_x << endl;
 //        cout << "Pos y = " << posi_y << endl;
 //        cout << "Spr = " << spr << endl;
+
         al_flip_display();
-     
+        al_set_timer_speed()
     }
     al_destroy_display(display);
     al_destroy_bitmap(borda);

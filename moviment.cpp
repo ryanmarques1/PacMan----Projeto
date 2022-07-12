@@ -6,6 +6,7 @@
 #include <allegro5/allegro_ttf.h>
 #include "pacman.h"
 #include "moviment.h"
+#include <string.h>
 using namespace std;
 
 /*
@@ -96,28 +97,45 @@ void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev){
         }
     }
 }
-void moviment_pac::mov_pac(int* x, int* y,int *spr){
+
+bool moviment_pac::obstaculos(int x, int y, char** m) {
+    if (x >= 0 && y >= 0) {
+        if ((m[y][x] == 'P' || m[y][x] == '-' || m[y][x] == '0' || m[y][x] == '1')) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+
+void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m){
+    int xm, ym;
+    xm = *x / 32;
+    xm--;
+    ym = *y / 32;
+    ym--;
     if(tecla[KUP] == true){
         *spr = 2;
-        if(*y-32 >= 32){
+        if(*y-32 >= 32 && obstaculos(xm,ym-1,m)){
             *y-=32;
         }
     }else
     if(tecla[KDOWN] == true){
-        *spr = 4 ;
-        if(*y+32 <= 608){
+        *spr = 4;
+        if(*y+32 <= 608 && obstaculos(xm, ym + 1, m)){
             *y+=32;
         }
     }else
     if(tecla[KRIGHT] == true){
         *spr = 3;
-        if(*x+32 <= 608){
+        if(*x+32 <= 608 && obstaculos(xm + 1, ym, m)){
             *x+=32;
         }
     }else
     if(tecla[KLEFT] == true){
         *spr = 1;
-        if(*x-32 >= 32){
+        if(*x-32 >= 32 && obstaculos(xm - 1, ym, m)){
             *x-=32;
         }
     }
@@ -161,10 +179,4 @@ void moviment_pac::pontuacao(int y,int x,char **Map){
     al_destroy_font(txt);
 //    cout << this->points << endl;
 }
-bool moviment_pac::colisao(int x,int y,int x2,int y2, int bx,int by,int bx2,int by2){
-    if(x > bx2) return false;
-    if(x2 < bx) return false;
-    if(y > by2) return false;
-    if(y2 < by) return false;
-    return true;
-}
+

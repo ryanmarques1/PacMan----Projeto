@@ -12,8 +12,8 @@ class moviment_pac{
         char startMap(char [][20]);
         void TImprimir();
         void movimenta_personagem(ALLEGRO_EVENT, int*,int*);
-        bool colisao(int,int,int,int,int,int,int,int);
-        void mov_pac(int*, int*,int*);
+        bool obstaculos(int,int,char**);
+        void mov_pac(int*, int*,int*, char**);
         void desenha(int*,int*,int*);
         void direcao_personagem(ALLEGRO_EVENT);
         void pontuacao(int,int,char**);
