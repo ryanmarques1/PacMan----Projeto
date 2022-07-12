@@ -7,6 +7,7 @@
 #include "pacman.h"
 #include "moviment.h"
 #include <string.h>
+#include <math.h>
 using namespace std;
 
 /*
@@ -36,64 +37,76 @@ moviment_pac::moviment_pac(){
     for(int i = 0; i < 5; i++){
         tecla[i]=false;
     }
+    this->xm = 0;
+    this->ym = 0;
     points = 0;
+    dire = 2;
+    sentido = 2;
     movi = NULL;
     if (!movi) cout << "Certo\n";
 }
 moviment_pac::~moviment_pac(){
     al_destroy_bitmap(this->movi);
 }
-/*
-colisão ->
-ter funções de max e min;
 
-max ->
-if(a >= b) return a;
-else return b;
+void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
+    cout << "Sen: " << sentido << endl;
+    cout << "X: " << x << " Y: " << y << endl;
 
-min ->
-if(a <= b) return a;
-else return b;
-
------------------
-
-colisão->
-ter os bitmaps;
-for i,j;
-float x1,y1,x2,y2;
-bool colisão = FALSE;
-if(!(x1>x2 + largura bitmap) || (y1>y2 + altura bitmap) || (x2 > x1 + largura) || (y2 + y1 + altura))
-
-cima = max entre y1 y2
-
-*/
-void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev){
+    int a, b;
      if(ev.type == ALLEGRO_EVENT_KEY_DOWN){
         switch(ev.keyboard.keycode){
             case ALLEGRO_KEY_UP:
-                tecla[KUP] = true;
-                tecla[KLEFT] = false;
-                tecla[KDOWN] = false;
-                tecla[KRIGHT] = false;
+                sentido = 0;
                 break;
             case ALLEGRO_KEY_DOWN:
-                tecla[KDOWN] = true;
-                tecla[KLEFT] = false;
-                tecla[KUP] = false;
-                tecla[KRIGHT] = false;
+                sentido = 1;
                 break;
             case ALLEGRO_KEY_RIGHT:
-                tecla[KRIGHT] = true;
-                tecla[KLEFT] = false;
-                tecla[KUP] = false;
-                tecla[KDOWN] = false;
+                sentido = 2;
                 break;
             case ALLEGRO_KEY_LEFT:
-                tecla[KLEFT] = true;
-                tecla[KRIGHT] = false;
-                tecla[KUP] = false;
-                tecla[KDOWN] = false;
+                sentido = 3;
                 break;
+        }
+        
+    }
+
+    if (atualizaval(x) && sentido == 0) {
+        a = ceil((double)(x) / (double)32);
+        b = ceil((double)(y) / (double)32);
+        a--;
+        b--;
+
+        if (y - 8 >= 32 && obstaculos(a, b - 1, m) ) {
+            dire = 0;
+        }
+    }else
+    if (atualizaval(x) && sentido == 1) {
+        a = ceil((double)(x) / (double)32);
+        b = ((double)(y) / (double)32);
+        a--;
+        b--;
+        if (y + 8 <= 608 && obstaculos(a, b + 1, m)) {
+            dire = 1;
+        }
+    }else
+    if (atualizaval(y) && sentido == 2) {
+        a = ((double)(x) / (double)32);
+        b = ceil((double)(y) / (double)32);
+        a--;
+        b--;
+        if(x+8 <= 608 && obstaculos(a+ 1, b, m)){
+            dire = 2;
+        }
+    }else
+    if (atualizaval(y) && sentido == 3) {
+        a = ceil((double)(x) / (double)32);
+        b = ceil((double)(y) / (double)32);
+        a--;
+        b--;
+        if(x-8 >= 32 && obstaculos(a - 1, b, m)){
+            dire = 3;
         }
     }
 }
@@ -105,38 +118,72 @@ bool moviment_pac::obstaculos(int x, int y, char** m) {
         }
         else {
             return false;
+
         }
     }
 }
 
+bool moviment_pac::atualizaval(int a){
+    if (a % 32 == 0) {
+        cout << "A: " << a << " Resto: " << a % 32 << endl;
+        return true;
+    }
+    else {
+        cout << "Resto: *" << endl;
+        return false;
+    }
+}
+
 void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m){
-    int xm, ym;
-    xm = *x / 32;
-    xm--;
-    ym = *y / 32;
-    ym--;
-    if(tecla[KUP] == true){
+    int bit = 4;
+
+    if(dire == 0){
         *spr = 2;
-        if(*y-32 >= 32 && obstaculos(xm,ym-1,m)){
-            *y-=32;
+        if (atualizaval(*x)) {           
+            this->xm = ceil((double)(*x) / (double)32);
+            this->ym = ceil((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+
+            if(*y-bit >= 32 && obstaculos(this->xm, this->ym-1,m)){
+                *y-=bit;
+            }
         }
     }else
-    if(tecla[KDOWN] == true){
+    if(dire == 1){
         *spr = 4;
-        if(*y+32 <= 608 && obstaculos(xm, ym + 1, m)){
-            *y+=32;
+        if (atualizaval(*x)) {
+            this->xm = ceil((double)(*x) / (double)32);
+            this->ym = ((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+            if(*y+bit <= 608 && obstaculos(this->xm, this->ym + 1, m)){
+                *y+=bit;
+            }
         }
     }else
-    if(tecla[KRIGHT] == true){
+    if(dire == 2){
         *spr = 3;
-        if(*x+32 <= 608 && obstaculos(xm + 1, ym, m)){
-            *x+=32;
+        if (atualizaval(*y)) {
+            this->xm = ((double)(*x) / (double)32);
+            this->ym = ceil((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+            if(*x+bit <= 608 && obstaculos(this->xm + 1, this->ym, m)){
+                *x+=bit;
+            }
         }
     }else
-    if(tecla[KLEFT] == true){
+    if(dire == 3){
         *spr = 1;
-        if(*x-32 >= 32 && obstaculos(xm - 1, ym, m)){
-            *x-=32;
+        if (atualizaval(*y)) {
+            this->xm = ceil((double)(*x) / (double)32);
+            this->ym = ceil((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+            if(*x-bit >= 32 && obstaculos(this->xm - 1, this->ym, m)){
+                *x-=bit;
+            }
         }
     }
 }

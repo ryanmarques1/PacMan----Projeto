@@ -170,8 +170,9 @@ int main(){
         if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
             fim_loop = true; ///clicando com no X;
         }else{
-            movi.direcao_personagem(event);
-            if(test && al_is_event_queue_empty(fila_events)){// Redesenha
+
+            movi.direcao_personagem(event, MapaMain,posi_x,posi_y);                           
+            if((test && al_is_event_queue_empty(fila_events))){// Redesenha
                 ///destruidores
                 p.~pilulas();
                 t.~tijolos();
@@ -184,6 +185,8 @@ int main(){
                 t.desenha_tijo(MapaMain);
                 movi.mov_pac(&posi_x,&posi_y,&spr,MapaMain);
                 movi.desenha(&posi_x,&posi_y,&spr);
+                movi.direcao_personagem(event, MapaMain, posi_x, posi_y);
+
                 ///redesenha
 //              cout << "Pos x = " << posi_x << endl;
 //              cout << "Pos y = " << posi_y << endl;
@@ -199,7 +202,6 @@ int main(){
 //        cout << "Spr = " << spr << endl;
 
         al_flip_display();
-        al_set_timer_speed()
     }
     al_destroy_display(display);
     al_destroy_bitmap(borda);
