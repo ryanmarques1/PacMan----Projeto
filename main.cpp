@@ -196,12 +196,12 @@ int main() {
                 
                 i.movi_random(&posi_xf[0], &posi_yf[0], &spr2, MapaMain);
                 i.desenha_inimigos(&posi_xf[0], &posi_yf[0], &spr2);
-                i.movi_random(&posi_xf[1], &posi_yf[1], &spr2, MapaMain);
-                i.desenha_inimigos(&posi_xf[1], &posi_yf[1], &spr2);
-                i.movi_random(&posi_xf[2], &posi_yf[2], &spr2, MapaMain);
-                i.desenha_inimigos(&posi_xf[2], &posi_yf[2], &spr2);
-                i.movi_random(&posi_xf[3], &posi_yf[3], &spr2, MapaMain);
-                i.desenha_inimigos(&posi_xf[3], &posi_yf[3], &spr2);
+                //i.movi_random(&posi_xf[1], &posi_yf[1], &spr2, MapaMain);
+                //i.desenha_inimigos(&posi_xf[1], &posi_yf[1], &spr2);
+                //i.movi_random(&posi_xf[2], &posi_yf[2], &spr2, MapaMain);
+                //i.desenha_inimigos(&posi_xf[2], &posi_yf[2], &spr2);
+                //i.movi_random(&posi_xf[3], &posi_yf[3], &spr2, MapaMain);
+               // i.desenha_inimigos(&posi_xf[3], &posi_yf[3], &spr2);
                 
                 //i.direcao_fantasma(MapaMain, posi_x, posi_y);
                 ///redesenha

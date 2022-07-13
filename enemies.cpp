@@ -42,15 +42,16 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
     ax = *x;
     ay = *y;
 	srand(time(NULL));
-    int r = rand() % 2;
+    int r;
+    r = rand() % 2;
 
     ///Cima
-    if (moviment_pac::atualizaval(*x) && dire == 0 && (!moviment_pac::obstaculos(xm, ym - 1, m) || (ym - 1) <= 0)) {// Eixo x Coluna / Eixo y linha
+    if (moviment_pac::atualizaval(*x) && dire == 0 && (!moviment_pac::obstaculos(xm, ym - 1, m) || (ym - 1) < 0)) {// Eixo x Coluna / Eixo y linha
         xm = ceil((double)(*x) / (double)32);
         ym = ceil((double)(*y) / (double)32);
         xm--;
         ym--;
-        if ((ym - 1) >= 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
+        if ((ym - 1) > 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
             cout << "------------------------------------------1Cima\n";
             dire = 0;
         }else //Dir
@@ -58,7 +59,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
         this->ym = ceil((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
-        if (r == 0 && (xm + 1) <= 18 && moviment_pac::obstaculos(xm+1, ym, m)) {
+        if (r == 0 && (xm + 1) < 32 && moviment_pac::obstaculos(xm+1, ym, m)) {
             dire = 2;
             cout << "---------------------------------------Dir\n";
         }else //Esq
@@ -66,20 +67,20 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
         this->ym = ceil((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
-        if (r == 1 && (xm - 1) >= 0 && moviment_pac::obstaculos(xm-1, ym , m)) {
+        if (r == 1 && (xm - 1) > 0 && moviment_pac::obstaculos(xm-1, ym , m)) {
             dire = 3;
             cout << "---------------------------------------Esq\n";
         }
     }
 
     ///Direita
-    if (moviment_pac::atualizaval(*y) && dire == 2 && (!moviment_pac::obstaculos(xm+1, ym, m) || (xm + 1) >= 18)) {// Eixo x Coluna / Eixo y linha
+    if (moviment_pac::atualizaval(*y) && dire == 2 && (!moviment_pac::obstaculos(xm+1, ym, m) || (xm + 1) > 32)) {// Eixo x Coluna / Eixo y linha
         this->xm = ((double)(*x) / (double)32);
         this->ym = ceil((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
         cout << "Obst: " << moviment_pac::obstaculos(xm + 1, ym, m) << " xm+1: " << xm + 1 << " R: " << r << endl;
-        if ((xm + 1) <= 18 && moviment_pac::obstaculos(xm + 1, ym, m)) {
+        if ((xm + 1) < 32 && moviment_pac::obstaculos(xm + 1, ym, m)) {
             dire = 2;
             cout << "----------------------------------------------1Dir\n";
         }
@@ -88,53 +89,52 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
         ym = ceil((double)(*y) / (double)32);
         xm--;
         ym--;
-        if (r == 0 && (ym - 1) >= 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
+        if (r == 0 && (ym - 1) > 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
             cout << "-----------------------------------------Cima\n";
             dire = 0;
         }else//Baixo
-        
         this->xm = ceil((double)(*x) / (double)32);
         this->ym = ((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
-        if (r == 1 && (ym + 1) <= 32 && moviment_pac::obstaculos(xm, ym+1 , m)) {
+        if (r == 1 && (ym + 1) < 32 && moviment_pac::obstaculos(xm, ym+1 , m)) {
             cout << "-----------------------------------------Baixo\n";
             dire = 1;
         }
     }
 
     ///Baixo
-    if (moviment_pac::atualizaval(*x) && dire == 1 && (!moviment_pac::obstaculos(xm, ym + 1, m) || (ym + 1) >= 18)) {// Eixo x Coluna / Eixo y linha
+    if (moviment_pac::atualizaval(*x) && dire == 1 && (!moviment_pac::obstaculos(xm, ym + 1, m) || (ym + 1) > 32)) {// Eixo x Coluna / Eixo y linha
         this->xm = ceil((double)(*x) / (double)32);
         this->ym = ((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
-        if ((ym + 1) <= 18 && moviment_pac::obstaculos(xm, ym + 1, m)) {
+        if ((ym + 1) < 32 && moviment_pac::obstaculos(xm, ym + 1, m)) {
             cout << "------------------------------------------1Baixo\n";
             dire = 0;
         }
         else
-            this->xm = ((double)(*x) / (double)32);
+        this->xm = ((double)(*x) / (double)32);
         this->ym = ceil((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
         //cout << "Obst: " << moviment_pac::obstaculos(xm+1, ym, m) << " xm+1: " << xm+1 << " R: " << r << endl;
-        if (r == 1 && (xm + 1) <= 18 && moviment_pac::obstaculos(xm + 1, ym, m)) {
+        if (r == 1 && (xm + 1) < 32 && moviment_pac::obstaculos(xm + 1, ym, m)) {
             dire = 2;
             cout << "---------------------------------------Dir\n";
         }
         else
-            this->xm = ceil((double)(*x) / (double)32);
+        this->xm = ceil((double)(*x) / (double)32);
         this->ym = ceil((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
-        if (r == 0 && (xm - 1) >= 0 && moviment_pac::obstaculos(xm - 1, ym, m)) {
+        if (r == 0 && (xm - 1) > 0 && moviment_pac::obstaculos(xm - 1, ym, m)) {
             dire = 3;
             cout << "---------------------------------------Esq\n";
         }
     }
     ///Esquerda
-    if (moviment_pac::atualizaval(*y) && dire == 3 && (!moviment_pac::obstaculos(xm - 1, ym, m) || (xm - 1) <= 0)) {// Eixo x Coluna / Eixo y linha
+    if (moviment_pac::atualizaval(*y) && dire == 3 && (!moviment_pac::obstaculos(xm - 1, ym, m) || (xm - 1) < 0)) {// Eixo x Coluna / Eixo y linha
         this->xm = ceil((double)(*x) / (double)32);
         this->ym = ceil((double)(*y) / (double)32);
         this->xm--;
@@ -144,21 +144,20 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
             cout << "----------------------------------------------1Dir\n";
         }
         else // Cima
-            xm = ceil((double)(*x) / (double)32);
+        xm = ceil((double)(*x) / (double)32);
         ym = ceil((double)(*y) / (double)32);
         xm--;
         ym--;
-        if (r == 0 && (ym - 1) >= 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
+        if (r == 0 && (ym - 1) > 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
             cout << "-----------------------------------------Cima\n";
             dire = 0;
         }
         else//Baixo
-
         this->xm = ceil((double)(*x) / (double)32);
         this->ym = ((double)(*y) / (double)32);
         this->xm--;
         this->ym--;
-        if (r == 1 && (ym + 1) <= 32 && moviment_pac::obstaculos(xm, ym + 1, m)) {
+        if (r == 1 && (ym + 1) < 32 && moviment_pac::obstaculos(xm, ym + 1, m)) {
             cout << "-----------------------------------------Baixo\n";
             dire = 1;
         }
@@ -172,7 +171,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
 }
 void inimigos::colidiPac(int x, int y, int x2,int y2) {
 	///colisão com o pac = GAME OVER;
-	if (x == x2 && y == y2) {
+	if (x == x2 && y == y2 || x2 == x && y2 == y) {
 		cout << "GAME OVER\n";
 		exit(0);
 		
