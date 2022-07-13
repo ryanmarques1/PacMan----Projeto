@@ -23,12 +23,12 @@ const float fps = 60.0; ///60 frames por segundo.
 //Dimensões
 using namespace std;
 
-enum keys_board{
-     KEY_ENTER, KEY_ESCAPE
+enum keys_board {
+    KEY_ENTER, KEY_ESCAPE
 };
 
-struct MapaFixo{
-    char MPF[lines][columns]={
+struct MapaFixo {
+    char MPF[lines][columns] = {
         "PPPPPPPPPBPPPPPPPPP",
         "PFAEPGAEPCPFAHPFAEP",
         "PPPPPBPPPPPPPBPPPPP",
@@ -38,8 +38,8 @@ struct MapaFixo{
         "PPPPPBPPPPPPPBPPPPP",
         "PFAAAIPFAAAEPJAAAEP",
         "PPPPPP-------PPPPPP",
-        "PGAEPD-GE1FH-DPFAHP",
-        "PBPPPB-B111B-BPPPBP",
+        "PGAEPD-GE-FH-DPFAHP",
+        "PBPPPB-B---B-BPPPBP",
         "PBPDPB-JAAAI-BPDPBP",
         "PBPBPB-------BPBPBP",
         "PBPBPCPFAAAEPCPBPBP",
@@ -51,95 +51,99 @@ struct MapaFixo{
     };
 };
 
-void menu(ALLEGRO_FONT *text){
+void menu(ALLEGRO_FONT* text) {
     //text = al_load_font("Fonts/04B_30__.ttf", 45, NULL);
-    if(!text){
+    if (!text) {
         al_show_native_message_box(al_get_current_display(), "Erro load font", "Erro text", "Erro ao carregar a fonte...", NULL, ALLEGRO_MESSAGEBOX_ERROR);
         al_destroy_display(al_get_current_display());
         exit(-1);
     }
-    al_draw_textf(text,al_map_rgb(255,0,0), W/2,W2/2.5,ALLEGRO_ALIGN_CENTER,"Press ENTER for Start");
-    al_draw_textf(text,al_map_rgb(255,0,255), W/2,W2/2,ALLEGRO_ALIGN_CENTER, "Press ESC for Exit");
+    al_draw_textf(text, al_map_rgb(255, 0, 0), W / 2, W2 / 2.5, ALLEGRO_ALIGN_CENTER, "Press ENTER for Start");
+    al_draw_textf(text, al_map_rgb(255, 0, 255), W / 2, W2 / 2, ALLEGRO_ALIGN_CENTER, "Press ESC for Exit");
     al_flip_display();
 }
-void music_menu(ALLEGRO_AUDIO_STREAM *m){
+void music_menu(ALLEGRO_AUDIO_STREAM* m) {
     //m = al_load_audio_stream("audios/samba_amigo.ogg", 4, 1024);
-    if(!m){
-         al_show_native_message_box(al_get_current_display(),"Erro music","Erro critico","Erro ao carregar a musica...",NULL,ALLEGRO_MESSAGEBOX_ERROR);
-         al_destroy_display(al_get_current_display());
-         exit(-1);
+    if (!m) {
+        al_show_native_message_box(al_get_current_display(), "Erro music", "Erro critico", "Erro ao carregar a musica...", NULL, ALLEGRO_MESSAGEBOX_ERROR);
+        al_destroy_display(al_get_current_display());
+        exit(-1);
     }
-    al_attach_audio_stream_to_mixer(m,al_get_default_mixer());
-    al_set_audio_stream_playmode(m,ALLEGRO_PLAYMODE_LOOP);//Quando chega ao fim, recomeça desde o início.
+    al_attach_audio_stream_to_mixer(m, al_get_default_mixer());
+    al_set_audio_stream_playmode(m, ALLEGRO_PLAYMODE_LOOP);//Quando chega ao fim, recomeça desde o início.
 }
-int main(){
+int main() {
 
-   ALLEGRO_DISPLAY *display = NULL;
-   ALLEGRO_BITMAP* borda, *fundo;
-   borda = fundo = NULL;
-   ALLEGRO_EVENT_QUEUE *fila_events = NULL; ///ponteiro para fila de eventos
-   ALLEGRO_TIMER *FPS = NULL; ///ptr timer;
-   ALLEGRO_FONT *texto = NULL; ///ptr para texto;
-   ///ponteiros de audio e som
-   ALLEGRO_AUDIO_STREAM *music = NULL;
-   ///ponteiros de audio e som
+    ALLEGRO_DISPLAY* display = NULL;
+    ALLEGRO_BITMAP* borda, * fundo;
+    borda = fundo = NULL;
+    ALLEGRO_EVENT_QUEUE* fila_events = NULL; ///ponteiro para fila de eventos
+    ALLEGRO_TIMER* FPS = NULL; ///ptr timer;
+    ALLEGRO_FONT* texto = NULL; ///ptr para texto;
+    ///ponteiros de audio e som
+    ALLEGRO_AUDIO_STREAM* music = NULL;
+    ///ponteiros de audio e som
 
-   /// Variaveis Padrões ---------------------------------------------------------------------------------------------
+    /// Variaveis Padrões ---------------------------------------------------------------------------------------------
     bool fim_loop = false; ///para o loop de eventos
-    bool teclas[2] = {false,false}; ///teclas;
-    int posi_x = 320, posi_y = 480,spr = 4,frame;
-    char **MapaMain;
-    MapaMain = (char**) malloc(20*sizeof(char*));
-    for(int i = 0; i < 20; i++){
-        MapaMain[i] =(char*) malloc(20*sizeof(char));
+    bool teclas[2] = { false,false }; ///teclas;
+    int posi_x = 320, posi_y = 480, spr = 4, spr2 = 4, frame;
+    int posi_xf[4], posi_yf[4];
+    posi_xf[0] = 32; posi_xf[1] = 608; posi_xf[2] = 608; posi_xf[3] = 32;
+    posi_yf[0] = 32; posi_yf[1] = 608; posi_yf[2] = 32; posi_yf[3] = 608;
+    char** MapaMain;
+    MapaMain = (char**)malloc(20 * sizeof(char*));
+    for (int i = 0; i < 20; i++) {
+        MapaMain[i] = (char*)malloc(20 * sizeof(char));
     }
 
-   /// ---------------------------------------------------------------------------------------------------------------
-   pilulas p;
-   tijolos t;
-   moviment_pac movi;
-   if(!al_init()) {
-      fprintf(stderr, "Falha ao iniciar o allegro!\n");
-      return -1;
-   }
+    /// ---------------------------------------------------------------------------------------------------------------
+    pilulas p;
+    tijolos t;
+    moviment_pac movi;
+    inimigos i;
+    if (!al_init()) {
+        fprintf(stderr, "Falha ao iniciar o allegro!\n");
+        return -1;
+    }
     MapaFixo MPF;
     /// Setar Mapa do Arquivo na variavel
-    for(int i = 0 ; i < 20; i++){
-        for(int j = 0; j < 20; j++){
+    for (int i = 0; i < 20; i++) {
+        for (int j = 0; j < 20; j++) {
             MapaMain[i][j] = MPF.MPF[i][j];
         }
     }
-   ///addons
-   al_init_image_addon();
-   al_install_keyboard();
-   al_install_audio();
-   al_init_acodec_addon();
-   al_reserve_samples(1);
-   al_init_primitives_addon();
-   al_init_font_addon();
-   al_init_ttf_addon();
+    ///addons
+    al_init_image_addon();
+    al_install_keyboard();
+    al_install_audio();
+    al_init_acodec_addon();
+    al_reserve_samples(1);
+    al_init_primitives_addon();
+    al_init_font_addon();
+    al_init_ttf_addon();
 
-   FPS = al_create_timer(1.0/fps);
+    FPS = al_create_timer(1.0 / fps);
 
-   ///addons
-   display = al_create_display(W, W2); //Cria uma tela com essas dimensoes
-   if(!display) {
-      fprintf(stderr, "Falha na criação do display!\n");
-      return -1;
-   }
-   al_clear_to_color(al_map_rgb(0,0,0)); //Cor de background da tela
+    ///addons
+    display = al_create_display(W, W2); //Cria uma tela com essas dimensoes
+    if (!display) {
+        fprintf(stderr, "Falha na criação do display!\n");
+        return -1;
+    }
+    al_clear_to_color(al_map_rgb(0, 0, 0)); //Cor de background da tela
 
-   ///Fundo e Borda
-   fundo = al_load_bitmap("Sprites/Fundo.jpg");
-   if(!fundo){
-        al_show_native_message_box(display,"Erro!","Erro!","A imagem não pode ser carregada",NULL,ALLEGRO_MESSAGEBOX_ERROR);
+    ///Fundo e Borda
+    fundo = al_load_bitmap("Sprites/Fundo.jpg");
+    if (!fundo) {
+        al_show_native_message_box(display, "Erro!", "Erro!", "A imagem não pode ser carregada", NULL, ALLEGRO_MESSAGEBOX_ERROR);
         al_destroy_display(display); //destruindo ptrdisplay.
         return -1;
-   }
+    }
 
     borda = al_load_bitmap("Sprites/Borda.png");
-    if(!borda){
-        al_show_native_message_box(display,"Erro!","Erro!","A imagem não pode ser carregada",NULL,ALLEGRO_MESSAGEBOX_ERROR);
+    if (!borda) {
+        al_show_native_message_box(display, "Erro!", "Erro!", "A imagem não pode ser carregada", NULL, ALLEGRO_MESSAGEBOX_ERROR);
         al_destroy_display(display); //destruindo ptrdisplay.
         return -1;
     }
@@ -162,45 +166,54 @@ int main(){
     //al_set_target_bitmap(pacm);
     //al_set_target_bitmap(al_get_backbuffer(display));
     //Inicio Game-----------------------------------------------------------------------------------------------------------------------
-    while(!fim_loop){
+    while (!fim_loop) {
         test = true;
         al_wait_for_event(fila_events, &event);
         frame = al_get_timer_count(FPS);
         //qual evento
-        if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+        if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
             fim_loop = true; ///clicando com no X;
-        }else{
+        }
+        else {
 
-            movi.direcao_personagem(event, MapaMain,posi_x,posi_y);                           
-            if((test && al_is_event_queue_empty(fila_events))){// Redesenha
+            movi.direcao_personagem(event, MapaMain, posi_x, posi_y);
+            //i.direcao_fantasma(MapaMain, posi_xf[0], posi_yf[0]);
+            if ((test && al_is_event_queue_empty(fila_events))) {// Redesenha
                 ///destruidores
                 p.~pilulas();
                 t.~tijolos();
                 movi.~moviment_pac();
+                i.~inimigos();
                 //-------------------
-                al_clear_to_color(al_map_rgb(0,0,0));
-                al_draw_bitmap(fundo,0,0,0);
-                al_draw_bitmap(borda,0,0,0);
+                al_clear_to_color(al_map_rgb(0, 0, 0));
+                al_draw_bitmap(fundo, 0, 0, 0);
+                al_draw_bitmap(borda, 0, 0, 0);
                 p.desenha_pilu(MapaMain);
                 t.desenha_tijo(MapaMain);
-                movi.mov_pac(&posi_x,&posi_y,&spr,MapaMain);
-                movi.desenha(&posi_x,&posi_y,&spr);
+                movi.mov_pac(&posi_x, &posi_y, &spr, MapaMain,9);
+                movi.desenha(&posi_x, &posi_y, &spr);
                 movi.direcao_personagem(event, MapaMain, posi_x, posi_y);
-
+                
+                i.movi_random(&posi_xf[0], &posi_yf[0], &spr2, MapaMain);
+                i.desenha_inimigos(&posi_xf[0], &posi_yf[0], &spr2);
+                i.movi_random(&posi_xf[1], &posi_yf[1], &spr2, MapaMain);
+                i.desenha_inimigos(&posi_xf[1], &posi_yf[1], &spr2);
+                i.movi_random(&posi_xf[2], &posi_yf[2], &spr2, MapaMain);
+                i.desenha_inimigos(&posi_xf[2], &posi_yf[2], &spr2);
+                i.movi_random(&posi_xf[3], &posi_yf[3], &spr2, MapaMain);
+                i.desenha_inimigos(&posi_xf[3], &posi_yf[3], &spr2);
+                
+                //i.direcao_fantasma(MapaMain, posi_x, posi_y);
                 ///redesenha
 //              cout << "Pos x = " << posi_x << endl;
 //              cout << "Pos y = " << posi_y << endl;
-                
+
         //      menu_pontos(texto);
                 movi.pontuacao((posi_x - 32) / 32, (posi_y - 32) / 32, MapaMain);
-
+                i.colidiPac(posi_xf[0], posi_yf[0], posi_x, posi_y);
             }
-            
-        }
-//        cout << "Pos x = " << posi_x << endl;
-//        cout << "Pos y = " << posi_y << endl;
-//        cout << "Spr = " << spr << endl;
 
+        }
         al_flip_display();
     }
     al_destroy_display(display);
@@ -209,6 +222,7 @@ int main(){
     p.~pilulas();
     t.~tijolos();
     movi.~moviment_pac();
+    i.~inimigos();
     al_destroy_event_queue(fila_events);
     al_destroy_timer(FPS);
     al_destroy_font(texto);

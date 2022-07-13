@@ -40,8 +40,8 @@ moviment_pac::moviment_pac(){
     this->xm = 0;
     this->ym = 0;
     points = 0;
-    dire = 2;
-    sentido = 2;
+    dire = 0;
+    sentido = 0;
     movi = NULL;
     if (!movi) cout << "Certo\n";
 }
@@ -50,9 +50,6 @@ moviment_pac::~moviment_pac(){
 }
 
 void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
-    cout << "Sen: " << sentido << endl;
-    cout << "X: " << x << " Y: " << y << endl;
-
     int a, b;
      if(ev.type == ALLEGRO_EVENT_KEY_DOWN){
         switch(ev.keyboard.keycode){
@@ -78,7 +75,7 @@ void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
         a--;
         b--;
 
-        if (y - 8 >= 32 && obstaculos(a, b - 1, m) ) {
+        if (y - 4 >= 32 && obstaculos(a, b - 1, m) ) {
             dire = 0;
         }
     }else
@@ -87,7 +84,7 @@ void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
         b = ((double)(y) / (double)32);
         a--;
         b--;
-        if (y + 8 <= 608 && obstaculos(a, b + 1, m)) {
+        if (y + 4 <= 608 && obstaculos(a, b + 1, m)) {
             dire = 1;
         }
     }else
@@ -96,7 +93,7 @@ void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
         b = ceil((double)(y) / (double)32);
         a--;
         b--;
-        if(x+8 <= 608 && obstaculos(a+ 1, b, m)){
+        if(x+ 4 <= 608 && obstaculos(a+ 1, b, m)){
             dire = 2;
         }
     }else
@@ -105,7 +102,7 @@ void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
         b = ceil((double)(y) / (double)32);
         a--;
         b--;
-        if(x-8 >= 32 && obstaculos(a - 1, b, m)){
+        if(x- 4 >= 32 && obstaculos(a - 1, b, m)){
             dire = 3;
         }
     }
@@ -125,32 +122,37 @@ bool moviment_pac::obstaculos(int x, int y, char** m) {
 
 bool moviment_pac::atualizaval(int a){
     if (a % 32 == 0) {
-        cout << "A: " << a << " Resto: " << a % 32 << endl;
+        //cout << "A: " << a << " Resto: " << a % 32 << endl;
         return true;
     }
     else {
-        cout << "Resto: *" << endl;
+        //cout << "Resto: *" << endl;
         return false;
     }
 }
 
-void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m){
+void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m, int dir=9){
     int bit = 4;
-
+    if (dir != 9) {
+        dire = dir;
+        cout << "Adsada\n";
+    }
+    cout << xm << " ***** " << ym << "Dir: " << dire << endl;
     if(dire == 0){
+        //cout << "T1" << endl;
         *spr = 2;
         if (atualizaval(*x)) {           
             this->xm = ceil((double)(*x) / (double)32);
             this->ym = ceil((double)(*y) / (double)32);
             this->xm--;
             this->ym--;
-
             if(*y-bit >= 32 && obstaculos(this->xm, this->ym-1,m)){
                 *y-=bit;
             }
         }
     }else
     if(dire == 1){
+        //cout << "T2" << endl;
         *spr = 4;
         if (atualizaval(*x)) {
             this->xm = ceil((double)(*x) / (double)32);
@@ -163,6 +165,7 @@ void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m){
         }
     }else
     if(dire == 2){
+        //cout << "T3" << endl;
         *spr = 3;
         if (atualizaval(*y)) {
             this->xm = ((double)(*x) / (double)32);
@@ -175,6 +178,7 @@ void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m){
         }
     }else
     if(dire == 3){
+        //cout << "T4" << endl;
         *spr = 1;
         if (atualizaval(*y)) {
             this->xm = ceil((double)(*x) / (double)32);
@@ -186,6 +190,12 @@ void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m){
             }
         }
     }
+}
+double moviment_pac::getxm() {
+    return this->xm;
+}
+double moviment_pac::getym() {
+    return this->ym;
 }
 void moviment_pac::desenha(int* x, int* y, int* spr){
     movi = al_load_bitmap("Sprites/Personagens/Voltorb/Volt.png");
