@@ -177,3 +177,42 @@ void inimigos::colidiPac(int x, int y, int x2,int y2) {
 		
 	}
 }
+double distancia(int x, int y, int fx, int fy) {
+    return abs(sqrt((x - fx) * (x - fx) + (y - fy) * (y - fy)));
+}
+void inimigos::movi_inteligente(int* x, int* y, int* fx, int* fy, char** m) {
+
+    //Auxiliares
+    int xx, yy, ffx, ffy;
+    int aux = 10000;
+    double d[4];
+    d[0] = distancia(*x, *y, *fx, *fy-1); //Cima
+    d[1] = distancia(*x, *y, *fx, *fy+1); //Baixo
+    d[2] = distancia(*x, *y, *fx+1, *fy); // Direita
+    d[3] = distancia(*x, *y, *fx-1, *fy); //Esquerda
+
+    for (int i = 0; i < 4; i++){
+        if (d[i] < aux) {
+            if (*x != *fx || *y != *fy) {
+                aux = d[i];
+                dire = i;
+            }
+        }
+    }
+    //*fx = *x;
+    //*fy = *y;
+
+    if (dire == 0) {
+        *fy -= 2.0;
+    }
+    else if (dire == 1) {
+        *fy += 2.0;
+    }
+    else if (dire == 2) {
+        *fx += 2.0;
+    }
+    else if (dire == 3) {
+        *fx -= 2.0;
+    }
+    //Auxiliares
+}

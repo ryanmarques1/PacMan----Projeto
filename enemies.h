@@ -17,6 +17,7 @@ class inimigos : public moviment_pac{
 
         void desenha_inimigos(int*,int*,int*);
         void movi_random(int*,int*,int*,char**);
+        void movi_inteligente(int*, int*, int*,int*, char**);
         void colidiPac(int, int, int,int);
         
         //void movi_random2(int*, int*, char**);
