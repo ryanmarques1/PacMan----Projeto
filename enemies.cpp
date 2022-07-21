@@ -33,139 +33,344 @@ void inimigos::desenha_inimigos(int* x, int *y, int* spr) {
 	}
     al_draw_bitmap_region(inim, 0, *spr * 32, 32, 32, *x, *y, 0);
 }
+/// -----------------------------------------------------------------------------------------------------------------------------------------------
+void inimigos::MTop(int* x, int* y, char** m) {
+    this->xm = ((double)(*x) / (double)32);
+    this->ym = ((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if ((this->ym - 1) > 0 && moviment_pac::obstaculos(this->xm, this->ym - 1, m)) {
+        //cout << "-----------------------------------------Cima\n";
+        this->dire = 0;
+    }
+}
+void inimigos::MDown(int* x, int* y, char** m) {
+    this->xm = ((double)(*x) / (double)32);
+    this->ym = ((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if ((this->ym + 1) < 18 && moviment_pac::obstaculos(this->xm, this->ym + 1, m)) {
+        //cout << "-----------------------------------------Baixo 999\n";
+        this->dire = 1;
+    }
+}
+void inimigos::MDir(int* x, int* y, char** m) {
+    this->xm = ((double)(*x) / (double)32);
+    this->ym = ((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if ((this->xm + 1) < 18 && moviment_pac::obstaculos(this->xm + 1, this->ym, m)) {
+        this->dire = 2;
+        //cout << "----------------------------------------------1Dir\n";
+    }
+}
+void inimigos::MEsq(int* x, int* y, char** m) {
+    this->xm = ((double)(*x) / (double)32);
+    this->ym = ((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if ((this->xm - 1) > 0 && moviment_pac::obstaculos(this->xm - 1, this->ym, m)) {
+        this->dire = 3;
+        //cout << "---------------------------------------Esq\n";
+    }
+}
 
+void inimigos::MTop2(int* x, int* y, char** m) {
+    this->xm = ceil((double)(*x) / (double)32);
+    this->ym = ceil((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if (*y-4 > 0 && moviment_pac::obstaculos(this->xm, this->ym - 1, m)) {
+        //cout << "Um\n";
+        this->dire = 0;
+    }
+}
+void inimigos::MDown2(int* x, int* y, char** m) {
+    this->xm = ceil((double)(*x) / (double)32);
+    this->ym = ((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if (*y+4 < 18 && moviment_pac::obstaculos(this->xm, this->ym + 1, m)) {
+        //cout << "Dois\n";
+        this->dire = 1;
+    }
+}
+void inimigos::MDir2(int* x, int* y, char** m) {
+    this->xm = ((double)(*x) / (double)32);
+    this->ym = ceil((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if (*x+4 < 18 && moviment_pac::obstaculos(this->xm + 1, this->ym, m)) {
+        this->dire = 2;
+        //cout << "Tres\n";
+    }
+}
+void inimigos::MEsq2(int* x, int* y, char** m) {
+    this->xm = ceil((double)(*x) / (double)32);
+    this->ym = ceil((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
+    if (*x-4 > 0 && moviment_pac::obstaculos(this->xm - 1, this->ym, m)) {
+        this->dire = 3;
+        //cout << "Quatro\n";
+    }
+}
+/// ----------------------------------------------------------------------------------------------------------------------------------------------
 void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
 	//srand(time(NULL)) para que as sementeste geradas nunca sejam iguais;
 	///já que a mesma é gerada desde da primeira compilação do C -> 01/01/1970
 	///tera herança com as colisões.
-    int ax, ay;
-    ax = *x;
-    ay = *y;
-	srand(time(NULL));
-    int r;
-    r = rand() % 2;
 
-    ///Cima
-    if (moviment_pac::atualizaval(*x) && dire == 0 && (!moviment_pac::obstaculos(xm, ym - 1, m) || (ym - 1) < 0)) {// Eixo x Coluna / Eixo y linha
-        xm = ceil((double)(*x) / (double)32);
-        ym = ceil((double)(*y) / (double)32);
-        xm--;
-        ym--;
-        if ((ym - 1) > 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
-            cout << "------------------------------------------1Cima\n";
-            dire = 0;
-        }else //Dir
-        this->xm = ((double)(*x) / (double)32);
-        this->ym = ceil((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        if (r == 0 && (xm + 1) < 32 && moviment_pac::obstaculos(xm+1, ym, m)) {
-            dire = 2;
-            cout << "---------------------------------------Dir\n";
-        }else //Esq
-        this->xm = ceil((double)(*x) / (double)32);
-        this->ym = ceil((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        if (r == 1 && (xm - 1) > 0 && moviment_pac::obstaculos(xm-1, ym , m)) {
-            dire = 3;
-            cout << "---------------------------------------Esq\n";
-        }
-    }
+    srand(time(NULL));
 
-    ///Direita
-    if (moviment_pac::atualizaval(*y) && dire == 2 && (!moviment_pac::obstaculos(xm+1, ym, m) || (xm + 1) > 32)) {// Eixo x Coluna / Eixo y linha
-        this->xm = ((double)(*x) / (double)32);
-        this->ym = ceil((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        cout << "Obst: " << moviment_pac::obstaculos(xm + 1, ym, m) << " xm+1: " << xm + 1 << " R: " << r << endl;
-        if ((xm + 1) < 32 && moviment_pac::obstaculos(xm + 1, ym, m)) {
-            dire = 2;
-            cout << "----------------------------------------------1Dir\n";
-        }
-        else // Cima
-        xm = ceil((double)(*x) / (double)32);
-        ym = ceil((double)(*y) / (double)32);
-        xm--;
-        ym--;
-        if (r == 0 && (ym - 1) > 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
-            cout << "-----------------------------------------Cima\n";
-            dire = 0;
-        }else//Baixo
-        this->xm = ceil((double)(*x) / (double)32);
-        this->ym = ((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        if (r == 1 && (ym + 1) < 32 && moviment_pac::obstaculos(xm, ym+1 , m)) {
-            cout << "-----------------------------------------Baixo\n";
-            dire = 1;
-        }
-    }
+    this->xm = ((double)(*x) / (double)32);
+    this->ym = ((double)(*y) / (double)32);
+    this->xm--;
+    this->ym--;
 
-    ///Baixo
-    if (moviment_pac::atualizaval(*x) && dire == 1 && (!moviment_pac::obstaculos(xm, ym + 1, m) || (ym + 1) > 32)) {// Eixo x Coluna / Eixo y linha
-        this->xm = ceil((double)(*x) / (double)32);
-        this->ym = ((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        if ((ym + 1) < 32 && moviment_pac::obstaculos(xm, ym + 1, m)) {
-            cout << "------------------------------------------1Baixo\n";
-            dire = 0;
+
+    cout << "0 - Xm = " << xm << " Ym = " << ym << endl;
+    cout << "X = " << *x << " Y = " << *y << endl;
+
+    if (moviment_pac::atualizaval(*x) && dire == 0) {// Eixo x Coluna / Eixo y linha        
+        int aux = *y / 32;
+        double aux2 = (double)*y / 32;
+        if ((!moviment_pac::obstaculos(xm, ceil(ym) - 1, m) || (ceil(ym) - 1) < 0)) {
+            while (true){
+                if ((rand() % 6) % 2 == 0) { ///Direita
+                    MDir(x, y, m);
+                    break;
+                }
+                else
+                if ((rand() % 6) % 2 == 1) { ///Esquerda
+                    MEsq(x, y, m);
+                    break;
+                }
+            }
+        }else
+        if(moviment_pac::obstaculos(xm-1, ym, m) || moviment_pac::obstaculos(xm + 1, ym, m)){
+            cout << endl << "0\n";
+            int random1 = rand() % 6;
+            if (random1 <= 2) {
+                MTop(x, y, m);
+            }
+            else{
+                while (true) {
+                    cout << "Aux: " << aux << " Aux2: " << aux2 << endl;
+                    if (aux == aux2) {
+                        while (true) {
+                            int random2 = rand() % 2;
+                            if (moviment_pac::obstaculos(xm - 1, ym, m) || moviment_pac::obstaculos(xm + 1, ym, m)) {
+                                if (xm > 0) {
+                                    cout << "1\n";
+                                    if (random2 == 0) {
+                                        cout << "Esq" << endl;
+                                        MEsq(x, y, m);
+                                        break;
+                                    }
+                                }
+                                else
+                                if (xm < 608) {
+                                    cout << "2\n";
+                                    if (random2 == 1) {
+                                        cout << "Dir" << endl;
+                                        MDir(x, y, m);
+                                        break;
+                                    }
+                                }
+                            }else{
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
         }
-        else
-        this->xm = ((double)(*x) / (double)32);
-        this->ym = ceil((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        //cout << "Obst: " << moviment_pac::obstaculos(xm+1, ym, m) << " xm+1: " << xm+1 << " R: " << r << endl;
-        if (r == 1 && (xm + 1) < 32 && moviment_pac::obstaculos(xm + 1, ym, m)) {
-            dire = 2;
-            cout << "---------------------------------------Dir\n";
+    }else
+    
+    if (moviment_pac::atualizaval(*y) && dire == 2) {// Eixo x Coluna / Eixo y linha
+        //MDir(x, y, m); ///Direita
+        //cout << "Test\n ";
+        int aux3 = *x / 32;
+        double aux4 = (double)*x / 32;
+        if (!moviment_pac::obstaculos(xm + 1, ym, m) || (xm + 1) > 18) {
+            while(true) {
+                if ((rand() % 6) % 2 == 0) {///Cima
+                    MTop(x, y, m); 
+                    break;
+                }else
+                if ((rand() % 6) % 2 == 1) {///Baixo
+                    MDown(x, y, m);
+                    break;
+                }
+            }
+        }else
+        if(moviment_pac::obstaculos(xm, ym-1, m) || moviment_pac::obstaculos(xm, ym+1, m)){
+            int random1 = rand() % 6;
+            if (random1 <= 2) {
+                MDir(x, y, m);
+                //arm.type = ALLEGRO_KEY_UP;
+            }
+            else {
+                while (true) {
+                    if (aux3 == aux4) {
+                        while (true) {
+                            int random2 = rand() % 2;
+                            if (moviment_pac::obstaculos(xm, ym - 1, m) || moviment_pac::obstaculos(xm, ym + 1, m)) {
+                                if (xm > 0) {
+                                    //cout << "1\n";
+                                    if (random2 == 0) {
+                                        MTop(x, y, m);
+                                        //arm.type = ALLEGRO_KEY_LEFT;
+                                        break;
+                                    }
+                                }
+                                else
+                                if (xm < 608) {
+                                    //cout << "2\n";
+                                    if (random2 == 1) {
+                                        MDown(x, y, m);
+                                        //arm.type = ALLEGRO_KEY_RIGHT;
+                                        break;
+                                    }
+                                }
+                            }else{
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
         }
-        else
-        this->xm = ceil((double)(*x) / (double)32);
-        this->ym = ceil((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        if (r == 0 && (xm - 1) > 0 && moviment_pac::obstaculos(xm - 1, ym, m)) {
-            dire = 3;
-            cout << "---------------------------------------Esq\n";
+    }else   
+
+    if (moviment_pac::atualizaval(*x) && dire == 1) {// Eixo x Coluna / Eixo y linha
+        //MDown(x, y, m);///Baixo
+        int aux = *y / 32;
+        double aux2 = (double)*y / 32;
+        if (!moviment_pac::obstaculos(xm, ym + 1, m) || (ym + 1) > 18) {
+            while (true) {
+                if ((rand() % 6) % 2 == 1){///Direita
+                    MDir(x, y, m);
+                    break;
+                }
+                else
+                if ((rand() % 6) % 2 == 0){///Esquerda
+                    MEsq(x, y, m);
+                    break;
+                }
+            }
+        }else
+        if(moviment_pac::obstaculos(xm-1, ym, m) || moviment_pac::obstaculos(xm + 1, ym, m)){
+            int random1 = rand() % 6;
+            if (random1 <= 2) {
+                MDown(x, y, m);
+            }
+            else{
+                while (true) {
+                    if (aux == aux2) {
+                        while (true) {
+                            int random2 = rand() % 2;
+                            if (moviment_pac::obstaculos(xm - 1, ym, m) || moviment_pac::obstaculos(xm + 1, ym, m)) {
+                                if (xm > 0) {
+                                    cout << "1\n";
+                                    if (random2 == 1) {
+                                        cout << "Esq" << endl;
+                                        MEsq(x, y, m);
+                                        break;
+                                    }
+                                }
+                                else
+                                if (xm < 608) {
+                                    cout << "2\n";
+                                    if (random2 == 0) {
+                                        cout << "Dir" << endl;
+                                        MDir(x, y, m);
+                                        break;
+                                    }
+                                }
+                            }else{
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
         }
-    }
-    ///Esquerda
-    if (moviment_pac::atualizaval(*y) && dire == 3 && (!moviment_pac::obstaculos(xm - 1, ym, m) || (xm - 1) < 0)) {// Eixo x Coluna / Eixo y linha
-        this->xm = ceil((double)(*x) / (double)32);
-        this->ym = ceil((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        if ((xm - 1) >= 0 && moviment_pac::obstaculos(xm - 1, ym, m)) {
-            dire = 3;
-            cout << "----------------------------------------------1Dir\n";
-        }
-        else // Cima
-        xm = ceil((double)(*x) / (double)32);
-        ym = ceil((double)(*y) / (double)32);
-        xm--;
-        ym--;
-        if (r == 0 && (ym - 1) > 0 && moviment_pac::obstaculos(xm, ym - 1, m)) {
-            cout << "-----------------------------------------Cima\n";
-            dire = 0;
-        }
-        else//Baixo
-        this->xm = ceil((double)(*x) / (double)32);
-        this->ym = ((double)(*y) / (double)32);
-        this->xm--;
-        this->ym--;
-        if (r == 1 && (ym + 1) < 32 && moviment_pac::obstaculos(xm, ym + 1, m)) {
-            cout << "-----------------------------------------Baixo\n";
-            dire = 1;
+    }else    
+
+    if (moviment_pac::atualizaval(*y) && dire == 3) {// Eixo x Coluna / Eixo y linha
+        //MEsq(x, y, m);///Esquerda
+        int a = ceil((double)(*x) / (double)32);
+        int b = ceil((double)(*y) / (double)32);
+        a--;
+        b--;
+        int aux3 = *x / 32;
+        double aux4 = (double)*x / 32;
+        if ((!moviment_pac::obstaculos(a - 1, b, m) || (a - 1) < 0)) {
+            while (true) {
+                if ((rand() % 6)%2 == 1) {///Cima
+                    MTop(x, y, m);
+                    break;
+                }
+                else 
+                if ((rand() % 6) % 2 == 0) {///Baixo
+                    //cout << "12121\n";
+                    MDown(x, y, m);
+                    break;
+                }
+            }
+        }else
+        if(moviment_pac::obstaculos(xm, ym-1, m) || moviment_pac::obstaculos(xm, ym+1, m)){
+            int random1 = rand() % 6;
+            if (random1 <= 2) {
+                MEsq(x, y, m);
+            }
+            else {
+                while (true) {
+                    if (aux3 == aux4) {
+                        while (true) {
+                            int random2 = rand() % 2;
+                            if (moviment_pac::obstaculos(xm, ym - 1, m) || moviment_pac::obstaculos(xm, ym + 1, m)) {
+                                if (xm > 0) {
+                                    if (random2 == 1) {
+                                        MTop(x, y, m);
+                                        break;
+                                    }
+                                }
+                                else
+                                if (xm < 608) {
+                                    if (random2 == 0) {
+                                        MDown(x, y, m);
+                                        break;
+                                    }
+                                }
+                            }else{
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
         }
     }
     
-    
-    xm = moviment_pac::getxm();
-    ym = moviment_pac::getym();
     moviment_pac::mov_pac(x, y,spr2,m,dire);
     //cout << "Intencao: " << sentido << endl;
 }
@@ -177,42 +382,4 @@ void inimigos::colidiPac(int x, int y, int x2,int y2) {
 		
 	}
 }
-double distancia(int x, int y, int fx, int fy) {
-    return abs(sqrt((x - fx) * (x - fx) + (y - fy) * (y - fy)));
-}
-void inimigos::movi_inteligente(int* x, int* y, int* fx, int* fy, char** m) {
-
-    //Auxiliares
-    int xx, yy, ffx, ffy;
-    int aux = 10000;
-    double d[4];
-    d[0] = distancia(*x, *y, *fx, *fy-1); //Cima
-    d[1] = distancia(*x, *y, *fx, *fy+1); //Baixo
-    d[2] = distancia(*x, *y, *fx+1, *fy); // Direita
-    d[3] = distancia(*x, *y, *fx-1, *fy); //Esquerda
-
-    for (int i = 0; i < 4; i++){
-        if (d[i] < aux) {
-            if (*x != *fx || *y != *fy) {
-                aux = d[i];
-                dire = i;
-            }
-        }
-    }
-    //*fx = *x;
-    //*fy = *y;
-
-    if (dire == 0) {
-        *fy -= 2.0;
-    }
-    else if (dire == 1) {
-        *fy += 2.0;
-    }
-    else if (dire == 2) {
-        *fx += 2.0;
-    }
-    else if (dire == 3) {
-        *fx -= 2.0;
-    }
-    //Auxiliares
-}
+/// -----------------------------------------------------------------------------------------------------------------------------------------------

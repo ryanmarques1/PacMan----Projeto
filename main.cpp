@@ -87,8 +87,9 @@ int main() {
     /// Variaveis Padrões ---------------------------------------------------------------------------------------------
     bool fim_loop = false; ///para o loop de eventos
     bool teclas[2] = { false,false }; ///teclas;
-    int posi_x = 320, posi_y = 480, spr = 4, spr2 = 1, frame;
+    int posi_x = 320, posi_y = 480, spr = 4, spr2[4], frame;
     int posi_xf[4], posi_yf[4];
+    spr2[0] = 1; spr2[1] = 1 ; spr2[2] = 1 ; spr2[3] = 1 ;
     posi_xf[0] = 32; posi_xf[1] = 608; posi_xf[2] = 608; posi_xf[3] = 32;
     posi_yf[0] = 32; posi_yf[1] = 608; posi_yf[2] = 32; posi_yf[3] = 608;
     char** MapaMain;
@@ -159,7 +160,7 @@ int main() {
     al_start_timer(FPS);
     texto = al_load_font("Fonts/04B_30__.ttf", 30, 0);
     //   menu(texto);
-    music = al_load_audio_stream("audios/theme_victory.ogg",4,1030);
+    //music = al_load_audio_stream("audios/samba_amigo.ogg",4,1030);
     //music_menu(music);
     bool test = false;
     ALLEGRO_EVENT event;  //variavel que receberá o evento atual.
@@ -183,8 +184,9 @@ int main() {
                 p.~pilulas();
                 t.~tijolos();
                 movi.~moviment_pac();
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 2; j++) {
                     i[j].~inimigos();
+                }
                 //-------------------
                 al_clear_to_color(al_map_rgb(0, 0, 0));
                 al_draw_bitmap(fundo, 0, 0, 0);
@@ -193,18 +195,36 @@ int main() {
                 t.desenha_tijo(MapaMain);
                 movi.mov_pac(&posi_x, &posi_y, &spr, MapaMain,9);
                 movi.desenha(&posi_x, &posi_y, &spr);
-                movi.direcao_personagem(event, MapaMain, posi_x, posi_y);
-                /*for (int j = 0; j < 4; j++) {
-                    i[j].movi_random(&posi_xf[j], &posi_yf[j], &spr2, MapaMain);
-                    i[j].desenha_inimigos(&posi_xf[j], &posi_yf[j], &spr2);
-                    i[j].colidiPac(posi_xf[j], posi_yf[j], posi_x, posi_y);
-                    
-                }*/
-                i[0].movi_inteligente(&posi_x, &posi_y, &posi_xf[0], &posi_yf[0], MapaMain);
-                i[0].desenha_inimigos(&posi_xf[0], &posi_yf[0], &spr2);
 
+                for (int j = 0; j < 4; j++) {
+                    i[j].movi_random(&posi_xf[j], &posi_yf[j], &spr2[j], MapaMain);
+                    i[j].desenha_inimigos(&posi_xf[j], &posi_yf[j], &spr2[j]);
+                    i[j].colidiPac(posi_xf[j], posi_yf[j], posi_x, posi_y);
+                }
+                /*i[0].movi_random(&posi_xf[0], &posi_yf[0], &spr2[0], MapaMain);
+                i[0].desenha_inimigos(&posi_xf[0], &posi_yf[0], &spr2[0]);
+                i[0].colidiPac(posi_xf[0], posi_yf[0], posi_x, posi_y);*/
+
+                /*i[1].movi_random(&posi_xf[1], &posi_yf[1], &spr2[1], MapaMain);
+                i[1].desenha_inimigos(&posi_xf[1], &posi_yf[1], &spr2[1]);
+                i[1].colidiPac(posi_xf[1], posi_yf[1], posi_x, posi_y);*/
+
+                /*i[2].movi_random(&posi_xf[2], &posi_yf[2], &spr2[2], MapaMain);
+                i[2].desenha_inimigos(&posi_xf[2], &posi_yf[2], &spr2[2]);
+                i[2].colidiPac(posi_xf[2], posi_yf[2], posi_x, posi_y);
+                */
+                /*i[3].movi_random(&posi_xf[3], &posi_yf[3], &spr2[3], MapaMain);
+                i[3].desenha_inimigos(&posi_xf[3], &posi_yf[3], &spr2[3]);
+                i[3].colidiPac(posi_xf[3], posi_yf[3], posi_x, posi_y);*/
+                
+                
+                ///redesenha
+//              cout << "Pos x = " << posi_x << endl;
+//              cout << "Pos y = " << posi_y << endl;
+
+        //      menu_pontos(texto);
                 movi.pontuacao((posi_x - 32) / 32, (posi_y - 32) / 32, MapaMain);
-                movi.victory(music);
+                
             }
 
         }
@@ -216,12 +236,12 @@ int main() {
     p.~pilulas();
     t.~tijolos();
     movi.~moviment_pac();
-    for (int j = 0; j < 4; j++)
+    for (int j = 0; j < 2; j++) {
         i[j].~inimigos();
+    }
     al_destroy_event_queue(fila_events);
     al_destroy_timer(FPS);
     al_destroy_font(texto);
-    al_destroy_audio_stream(music);
     ///destroyers
     return 0;
 }

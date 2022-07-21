@@ -135,13 +135,12 @@ void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m, int dir=9){
     int bit = 4;
     if (dir != 9) {
         dire = dir;
-        cout << "Adsada\n";
     }
-    cout << xm << " ***** " << ym << "Dir: " << dire << endl;
     if(dire == 0){
         //cout << "T1" << endl;
         *spr = 2;
-        if (atualizaval(*x)) {           
+        if (atualizaval(*x)) {  
+            //cout << "Aqui" << endl;
             this->xm = ceil((double)(*x) / (double)32);
             this->ym = ceil((double)(*y) / (double)32);
             this->xm--;
