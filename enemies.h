@@ -14,21 +14,15 @@ class inimigos : public moviment_pac{
     public:
         inimigos();
         ~inimigos();
-
         void desenha_inimigos(int*,int*,int*);
         void movi_random(int*,int*,int*,char**);
+        virtual void mov_pac(int*, int*, int*, char**, int);
+        int getdire();
         void colidiPac(int, int, int,int);
         void MTop(int*, int*, char**);
         void MDown(int*, int*, char**);
         void MDir(int*, int*, char**);
         void MEsq(int*, int*, char**);
-        void MTop2(int*, int*, char**);
-        void MDown2(int*, int*, char**);
-        void MDir2(int*, int*, char**);
-        void MEsq2(int*, int*, char**);
-
-        
-        //void movi_random2(int*, int*, char**);
     private:
         ALLEGRO_BITMAP* inim;
         int dire, sentido,iten;

@@ -1,6 +1,7 @@
 #include "pacman.h"
 #include "moviment.h"
 #include "enemies.h"
+#include "enemiesint.h"
 #include <Windows.h>
 #include <iostream>
 #include <allegro5/allegro.h>
@@ -38,7 +39,7 @@ struct MapaFixo {
         "PPPPPBPPPPPPPBPPPPP",
         "PFAAAIPFAAAEPJAAAEP",
         "PPPPPP-------PPPPPP",
-        "PGAEPD-GE-FH-DPFAHP",
+        "PGAEPD-GEEFH-DPFAHP",
         "PBPPPB-B---B-BPPPBP",
         "PBPDPB-JAAAI-BPDPBP",
         "PBPBPB-------BPBPBP",
@@ -88,10 +89,13 @@ int main() {
     bool fim_loop = false; ///para o loop de eventos
     bool teclas[2] = { false,false }; ///teclas;
     int posi_x = 320, posi_y = 480, spr = 4, spr2[4], frame;
-    int posi_xf[4], posi_yf[4];
+    int posi_xf[5], posi_yf[5];
     spr2[0] = 1; spr2[1] = 1 ; spr2[2] = 1 ; spr2[3] = 1 ;
     posi_xf[0] = 32; posi_xf[1] = 608; posi_xf[2] = 608; posi_xf[3] = 32;
     posi_yf[0] = 32; posi_yf[1] = 608; posi_yf[2] = 32; posi_yf[3] = 608;
+    posi_xf[4] = 288; posi_yf[4] = 288;
+
+    //------------//
     char** MapaMain;
     MapaMain = (char**)malloc(20 * sizeof(char*));
     for (int i = 0; i < 20; i++) {
@@ -101,8 +105,14 @@ int main() {
     /// ---------------------------------------------------------------------------------------------------------------
     pilulas p;
     tijolos t;
-    moviment_pac movi;
+    moviment_pac movi, *movifm[5];
     inimigos i[4];
+    inimigos_int iN;
+    movifm[0] = &i[0]; 
+    movifm[1] = &i[1];
+    movifm[2] = &i[2]; 
+    movifm[3] = &i[3];
+    movifm[4] = &iN;
     if (!al_init()) {
         fprintf(stderr, "Falha ao iniciar o allegro!\n");
         return -1;
@@ -198,9 +208,16 @@ int main() {
 
                 for (int j = 0; j < 4; j++) {
                     i[j].movi_random(&posi_xf[j], &posi_yf[j], &spr2[j], MapaMain);
+                    movifm[j]->mov_pac(&posi_xf[j], &posi_yf[j], &spr2[j], MapaMain,i[j].getdire());
+                    
+                    
                     i[j].desenha_inimigos(&posi_xf[j], &posi_yf[j], &spr2[j]);
                     i[j].colidiPac(posi_xf[j], posi_yf[j], posi_x, posi_y);
                 }
+               int spr3 = 3;
+               iN.movi_inteligente(&posi_x, &posi_y, &posi_xf[4], &posi_yf[4], MapaMain);
+               movifm[4]->mov_pac(&posi_xf[4], &posi_yf[4],&spr3, MapaMain, iN.getdire());
+               iN.desenha_inimigoInt(&posi_xf[4], &posi_yf[4], &spr3);
                 /*i[0].movi_random(&posi_xf[0], &posi_yf[0], &spr2[0], MapaMain);
                 i[0].desenha_inimigos(&posi_xf[0], &posi_yf[0], &spr2[0]);
                 i[0].colidiPac(posi_xf[0], posi_yf[0], posi_x, posi_y);*/
@@ -223,7 +240,7 @@ int main() {
 //              cout << "Pos y = " << posi_y << endl;
 
         //      menu_pontos(texto);
-                movi.pontuacao((posi_x - 32) / 32, (posi_y - 32) / 32, MapaMain);
+                movi.pontuacao_victory((posi_x - 32) / 32, (posi_y - 32) / 32, MapaMain);
                 
             }
 
@@ -236,9 +253,10 @@ int main() {
     p.~pilulas();
     t.~tijolos();
     movi.~moviment_pac();
-    for (int j = 0; j < 2; j++) {
+    for (int j = 0; j < 4; j++) {
         i[j].~inimigos();
     }
+    iN.~inimigos_int();
     al_destroy_event_queue(fila_events);
     al_destroy_timer(FPS);
     al_destroy_font(texto);

@@ -74,47 +74,6 @@ void inimigos::MEsq(int* x, int* y, char** m) {
         //cout << "---------------------------------------Esq\n";
     }
 }
-
-void inimigos::MTop2(int* x, int* y, char** m) {
-    this->xm = ceil((double)(*x) / (double)32);
-    this->ym = ceil((double)(*y) / (double)32);
-    this->xm--;
-    this->ym--;
-    if (*y-4 > 0 && moviment_pac::obstaculos(this->xm, this->ym - 1, m)) {
-        //cout << "Um\n";
-        this->dire = 0;
-    }
-}
-void inimigos::MDown2(int* x, int* y, char** m) {
-    this->xm = ceil((double)(*x) / (double)32);
-    this->ym = ((double)(*y) / (double)32);
-    this->xm--;
-    this->ym--;
-    if (*y+4 < 18 && moviment_pac::obstaculos(this->xm, this->ym + 1, m)) {
-        //cout << "Dois\n";
-        this->dire = 1;
-    }
-}
-void inimigos::MDir2(int* x, int* y, char** m) {
-    this->xm = ((double)(*x) / (double)32);
-    this->ym = ceil((double)(*y) / (double)32);
-    this->xm--;
-    this->ym--;
-    if (*x+4 < 18 && moviment_pac::obstaculos(this->xm + 1, this->ym, m)) {
-        this->dire = 2;
-        //cout << "Tres\n";
-    }
-}
-void inimigos::MEsq2(int* x, int* y, char** m) {
-    this->xm = ceil((double)(*x) / (double)32);
-    this->ym = ceil((double)(*y) / (double)32);
-    this->xm--;
-    this->ym--;
-    if (*x-4 > 0 && moviment_pac::obstaculos(this->xm - 1, this->ym, m)) {
-        this->dire = 3;
-        //cout << "Quatro\n";
-    }
-}
 /// ----------------------------------------------------------------------------------------------------------------------------------------------
 void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
 	//srand(time(NULL)) para que as sementeste geradas nunca sejam iguais;
@@ -370,9 +329,16 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
             }
         }
     }
-    
-    moviment_pac::mov_pac(x, y,spr2,m,dire);
     //cout << "Intencao: " << sentido << endl;
+}
+void inimigos::mov_pac(int* x, int* y, int* spr2, char** m, int dir) {
+
+    moviment_pac::mov_pac(x, y, spr2, m, dire);
+
+}
+int inimigos::getdire() {
+
+    return this->dire;
 }
 void inimigos::colidiPac(int x, int y, int x2,int y2) {
 	///colisão com o pac = GAME OVER;

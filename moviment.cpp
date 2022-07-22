@@ -51,7 +51,7 @@ moviment_pac::~moviment_pac(){
 
 void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
     int a, b;
-     if(ev.type == ALLEGRO_EVENT_KEY_DOWN){
+    if(ev.type == ALLEGRO_EVENT_KEY_DOWN){
         switch(ev.keyboard.keycode){
             case ALLEGRO_KEY_UP:
                 sentido = 0;
@@ -66,7 +66,6 @@ void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
                 sentido = 3;
                 break;
         }
-        
     }
 
     if (atualizaval(x) && sentido == 0) {
@@ -215,24 +214,21 @@ void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
     }
 }
 
-void moviment_pac::pontuacao(int y,int x,char **Map){
+void moviment_pac::pontuacao_victory(int y,int x,char **Map){
     int w = 900, w2 = 672;
     ALLEGRO_FONT* txt = al_load_font("Fonts/04B_30__.ttf", 21, 0);
-    al_draw_textf(txt, al_map_rgb(255, 0, 0), w - 128, w2 - 500, ALLEGRO_ALIGN_CENTER, "SCORE: %d", this->points);
+    ALLEGRO_AUDIO_STREAM* musica = al_load_audio_stream("audios/theme_victory.ogg", 4, 1024);
+    
+    al_draw_textf(txt, al_map_rgb(255, 0, 0), w - 130, w2 - 500, ALLEGRO_ALIGN_CENTER, "SCORE: %d", this->points);
     if(Map[x][y] == 'P'){
         this->points += 25;
-//        cout << "Letra = " << Map[x][y] << endl;
-//        cout << "Pos x = " << x << endl;
-//        cout << "Pos y = " << y << endl;
-//        for(int i = 0 ; i < 20; i++){
-//            for(int j = 0; j < 20; j++){
-//                cout << Map[i][j];
-//            }
-//            cout << endl;
-//        }
         Map[x][y] = '-';
     }
+    if (this->points == 4900) {
+        al_attach_audio_stream_to_mixer(musica, al_get_default_mixer());
+        al_set_audio_stream_playmode(musica, ALLEGRO_PLAYMODE_LOOP);//Quando chega ao fim, recomeça desde o início.
+    }
     al_destroy_font(txt);
-//    cout << this->points << endl;
+    al_destroy_audio_stream(musica);
 }
 
