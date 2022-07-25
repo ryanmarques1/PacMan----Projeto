@@ -1,9 +1,12 @@
 #include <iostream>
+#include <Windows.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+
+
 #include "pacman.h"
 #include "moviment.h"
 #include <string.h>
@@ -201,34 +204,35 @@ void moviment_pac::desenha(int* x, int* y, int* spr){
     al_draw_bitmap_region(movi,0,*spr*32,32,32,*x,*y,0);
 }
 
-void moviment_pac::movimenta_personagem(ALLEGRO_EVENT ev, int *x, int *y){
-    if(ev.type == ALLEGRO_EVENT_TIMER){
-        if(tecla[KUP] == true && *y >= 50)
-            *y-=32;
-        if(*y <= 672 - 50 - 32)
-            *y+=32;
-        if(*x <= 672 - 50 - 32)
-            *x+=32;
-        if(*x >= 50)
-            *x-=32;
-    }
-}
 
-void moviment_pac::pontuacao_victory(int y,int x,char **Map){
+
+void moviment_pac::pontuacao(int y,int x,char **Map, ALLEGRO_FONT* t, ALLEGRO_AUDIO_STREAM* m, ALLEGRO_SAMPLE* p){
     int w = 900, w2 = 672;
-    ALLEGRO_FONT* txt = al_load_font("Fonts/04B_30__.ttf", 21, 0);
-    ALLEGRO_AUDIO_STREAM* musica = al_load_audio_stream("audios/theme_victory.ogg", 4, 1024);
+    int sons;
     
-    al_draw_textf(txt, al_map_rgb(255, 0, 0), w - 130, w2 - 500, ALLEGRO_ALIGN_CENTER, "SCORE: %d", this->points);
+
+    if (!t || !m || !p) {
+        printf("Erro ao carregar o texto, e sons/audios\n");
+        exit(-1);
+    }
+    
+    al_draw_textf(t, al_map_rgb(255, 0, 0), w - 130, w2 - 500, ALLEGRO_ALIGN_CENTER, "SCORE: %d", this->points);
     if(Map[x][y] == 'P'){
-        this->points += 25;
+    
+          al_play_sample(p, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_BIDIR, NULL);
+        this->points += 30;
         Map[x][y] = '-';
+       
     }
+    
     if (this->points == 4900) {
-        al_attach_audio_stream_to_mixer(musica, al_get_default_mixer());
-        al_set_audio_stream_playmode(musica, ALLEGRO_PLAYMODE_LOOP);//Quando chega ao fim, recomeça desde o início.
+       
+        al_draw_textf(t, al_map_rgb(255, 0, 0), w - 135, w2 - 600, ALLEGRO_ALIGN_CENTER,"V I C T O R Y");
+        al_attach_audio_stream_to_mixer(m, al_get_default_mixer());
+        al_set_audio_stream_playmode(m, ALLEGRO_PLAYMODE_LOOP);//Quando chega ao fim, recomeça desde o início.
+       
     }
-    al_destroy_font(txt);
-    al_destroy_audio_stream(musica);
+
+    
 }
 

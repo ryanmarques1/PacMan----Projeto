@@ -1,0 +1,22 @@
+[---Ryan Marques, Mariana Castro e Bernardo Miranda---]
+
+ALLEGRO + C++ -> PacPoke
+
+
+
+-----------------------------------------------------------------------||------------------------||
+Utilizamos a base da movi_random() (Movimentaçao randomica dos demais fantasmas)
+1º: Declaramos int a e b como auxiliares para receber as respectivas posições x e y
+do fantasma inteligente. Fizemos cast explicito para converter int->double divido
+por 32 (larg, alt dos sprites). Decrementamos pois na matriz de char contém o '\n'.
+
+2º: Nesse ponto é utilizar estruturas de condição, ifelse, a logica foi se o fx 
+(posiçáo x do fantasma) for menor do que x (posição x do pacman) 'e' a direção for
+diferente de 3 (esquerda) 'e'  for livre de obstáculos  'e'  a posição y do fantasma
+for verdade, o fantasma deve seguir pela direita. Mesma coisa para os demais
+se pac ta indo pela direta , fantasma o segue pela esquerda, se for por cima
+segue por baixo.
+
+3º
+
+4º

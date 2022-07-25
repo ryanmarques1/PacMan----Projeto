@@ -2,6 +2,7 @@
 #include "moviment.h"
 #include <iostream>
 #include <stdlib.h>
+#include <Windows.h>
 #include <time.h>
 #include <math.h>
 
@@ -40,7 +41,7 @@ void inimigos::MTop(int* x, int* y, char** m) {
     this->xm--;
     this->ym--;
     if ((this->ym - 1) > 0 && moviment_pac::obstaculos(this->xm, this->ym - 1, m)) {
-        //cout << "-----------------------------------------Cima\n";
+       
         this->dire = 0;
     }
 }
@@ -50,7 +51,7 @@ void inimigos::MDown(int* x, int* y, char** m) {
     this->xm--;
     this->ym--;
     if ((this->ym + 1) < 18 && moviment_pac::obstaculos(this->xm, this->ym + 1, m)) {
-        //cout << "-----------------------------------------Baixo 999\n";
+        
         this->dire = 1;
     }
 }
@@ -61,7 +62,7 @@ void inimigos::MDir(int* x, int* y, char** m) {
     this->ym--;
     if ((this->xm + 1) < 18 && moviment_pac::obstaculos(this->xm + 1, this->ym, m)) {
         this->dire = 2;
-        //cout << "----------------------------------------------1Dir\n";
+        
     }
 }
 void inimigos::MEsq(int* x, int* y, char** m) {
@@ -71,7 +72,7 @@ void inimigos::MEsq(int* x, int* y, char** m) {
     this->ym--;
     if ((this->xm - 1) > 0 && moviment_pac::obstaculos(this->xm - 1, this->ym, m)) {
         this->dire = 3;
-        //cout << "---------------------------------------Esq\n";
+        
     }
 }
 /// ----------------------------------------------------------------------------------------------------------------------------------------------
@@ -152,8 +153,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
     }else
     
     if (moviment_pac::atualizaval(*y) && dire == 2) {// Eixo x Coluna / Eixo y linha
-        //MDir(x, y, m); ///Direita
-        //cout << "Test\n ";
+    
         int aux3 = *x / 32;
         double aux4 = (double)*x / 32;
         if (!moviment_pac::obstaculos(xm + 1, ym, m) || (xm + 1) > 18) {
@@ -172,7 +172,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
             int random1 = rand() % 6;
             if (random1 <= 2) {
                 MDir(x, y, m);
-                //arm.type = ALLEGRO_KEY_UP;
+                
             }
             else {
                 while (true) {
@@ -181,10 +181,10 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
                             int random2 = rand() % 2;
                             if (moviment_pac::obstaculos(xm, ym - 1, m) || moviment_pac::obstaculos(xm, ym + 1, m)) {
                                 if (xm > 0) {
-                                    //cout << "1\n";
+                                    
                                     if (random2 == 0) {
                                         MTop(x, y, m);
-                                        //arm.type = ALLEGRO_KEY_LEFT;
+                                        
                                         break;
                                     }
                                 }
@@ -193,7 +193,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
                                     //cout << "2\n";
                                     if (random2 == 1) {
                                         MDown(x, y, m);
-                                        //arm.type = ALLEGRO_KEY_RIGHT;
+                                        
                                         break;
                                     }
                                 }
@@ -271,7 +271,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
     }else    
 
     if (moviment_pac::atualizaval(*y) && dire == 3) {// Eixo x Coluna / Eixo y linha
-        //MEsq(x, y, m);///Esquerda
+        
         int a = ceil((double)(*x) / (double)32);
         int b = ceil((double)(*y) / (double)32);
         a--;
@@ -286,7 +286,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
                 }
                 else 
                 if ((rand() % 6) % 2 == 0) {///Baixo
-                    //cout << "12121\n";
+                    
                     MDown(x, y, m);
                     break;
                 }
@@ -340,12 +340,16 @@ int inimigos::getdire() {
 
     return this->dire;
 }
-void inimigos::colidiPac(int x, int y, int x2,int y2) {
-	///colisão com o pac = GAME OVER;
-	if (x == x2 && y == y2 || x2 == x && y2 == y) {
-		cout << "GAME OVER\n";
-		exit(0);
-		
-	}
+void inimigos::colidiPac(int x, int y, int x2,int y2, int ant_pacx, int ant_pacy, ALLEGRO_FONT *t) {
+	///colisão com o pac = GAME OVER
+    if (!t) {
+        printf("Erro em carregar a fonte !\n");
+        exit(-1);
+    }
+	if (x == x2 && y == y2 || ant_pacx == x2 && ant_pacy == y2) {
+        al_draw_textf(t, al_map_rgb(255, 0, 0), 900 - 135, 672 - 600, ALLEGRO_ALIGN_CENTER, "GAME OVER RUIM");
+      
+    }
 }
+
 /// -----------------------------------------------------------------------------------------------------------------------------------------------

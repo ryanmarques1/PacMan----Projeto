@@ -16,6 +16,7 @@ class inimigos_int : public moviment_pac {
 
 		void desenha_inimigoInt(int*, int*, int*);
 		void movi_inteligente(int*,int*,int*,int*, char**);
+		void colidiPac(int, int, int, int,int,int,ALLEGRO_FONT*);
 		double distancia(int, int, int, int);
 		virtual void mov_pac(int*, int*, int*, char**, int);
 		int getdire();
