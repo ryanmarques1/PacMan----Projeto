@@ -1,5 +1,5 @@
+#include "base.h"
 #include "pacman.h"
-#include "moviment.h"
 #include "enemies.h"
 #include "enemiesint.h"
 #include <iostream>
@@ -39,7 +39,7 @@ struct MapaFixo {
         "PPPPPBPPPPPPPBPPPPP",
         "PFAAAIPFAAAEPJAAAEP",
         "PPPPPP-------PPPPPP",
-        "PGAEPD-GE-FH-DPFAHP",
+        "PGAEPD-GAAAH-DPFAHP",
         "PBPPPB-B---B-BPPPBP",
         "PBPDPB-JAAAI-BPDPBP",
         "PBPBPB-------BPBPBP",
@@ -60,9 +60,10 @@ int main() {
     borda = fundo = NULL;
     ALLEGRO_EVENT_QUEUE* fila_events = NULL; ///ponteiro para fila de eventos
     ALLEGRO_TIMER* FPS = NULL; ///ptr timer 
-    ALLEGRO_AUDIO_STREAM* msc = NULL;
+    ALLEGRO_AUDIO_STREAM* msc = NULL, *msc2 = NULL;
     ALLEGRO_SAMPLE* pills = NULL;
-    ALLEGRO_FONT* txt, *txt2 = NULL;
+    ALLEGRO_FONT* txt, * txt2;
+    txt = txt2 = NULL;
     ALLEGRO_SAMPLE_INSTANCE* ins = NULL;
     /// Variaveis Padrões ---------------------------------------------------------------------------------------------
     bool fim_loop = false; ///para o loop de eventos
@@ -156,12 +157,19 @@ int main() {
     al_flip_display();
     al_start_timer(FPS);
     
+
+    bool coli = false, victory = false;
     bool test = false; //redesenha
     ALLEGRO_EVENT event;  //variavel que receberá o evento atual.
     msc = al_load_audio_stream("audios/theme_victory.ogg", 4, 1024);
+    msc2 = al_load_audio_stream("audios/Game_Over.ogg", 4, 1024);
     pills = al_load_sample("audios/pills.ogg");
-    txt = al_load_font("Fonts/Vermin_Vibes_1989.ttf", 25, 0);
-    txt2 = al_load_font("Fonts/Vermin_Vibes_1989.ttf", 30, 0);
+    txt = al_load_font("Fonts/Vermin_Vibes_1989.ttf", 60, 0);
+    txt2 = al_load_font("Fonts/Vermin_Vibes_1989.ttf", 60, 0);
+    if (!txt || !txt2 ||!msc || !pills) {
+        cout << "Erro ao carregar as fontes e musicas!\n";
+        exit(-1);
+    }
     ins = al_create_sample_instance(pills);
     al_attach_sample_instance_to_mixer(ins, al_get_default_mixer());
     //Inicio Game-----------------------------------------------------------------------------------------------------------------------
@@ -174,9 +182,11 @@ int main() {
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE || event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
             fim_loop = true; ///clicando com no X;
         }
-        else {
+        
+        else{
 
             movi.direcao_personagem(event, MapaMain, posi_x, posi_y);
+            
             if ((test && al_is_event_queue_empty(fila_events))) {// Redesenha
                 ///destruidores
                 p.~pilulas();
@@ -185,6 +195,7 @@ int main() {
                 for (int j = 0; j < 4; j++) {
                     i[j].~inimigos();
                 }
+                iN.~inimigos_int();
                 //-------------------
                 al_clear_to_color(al_map_rgb(0, 0, 0)); //clear no mapa
                 al_draw_bitmap(fundo, 0, 0, 0); //desenha fundo
@@ -199,19 +210,75 @@ int main() {
                     movifm[j]->mov_pac(&posi_xf[j], &posi_yf[j], &spr2[j], MapaMain,i[j].getdire());
                     
                     i[j].desenha_inimigos(&posi_xf[j], &posi_yf[j], &spr2[j]);
-                    i[j].colidiPac(posi_x, posi_y, posi_xf[j], posi_yf[j], ant_px,ant_py,txt2);
+                    if (i[j].colidiPac(posi_x, posi_y, posi_xf[j], posi_yf[j], ant_px, ant_py)){
+                        coli = true;
+                    
+                    }
                 }
                iN.movi_inteligente(&posi_x, &posi_y, &posi_xf[4], &posi_yf[4], MapaMain);
                movifm[4]->mov_pac(&posi_xf[4], &posi_yf[4],&spr3, MapaMain, iN.getdire());
                iN.desenha_inimigoInt(&posi_xf[4], &posi_yf[4], &spr3);
-               iN.colidiPac(posi_x, posi_y, posi_xf[4], posi_yf[4], ant_px, ant_py,txt2);
+               if (iN.colidiPac(posi_x, posi_y, posi_xf[4], posi_yf[4], ant_px, ant_py))
+                   coli = true;
 
-               movi.pontuacao((posi_x - 32) / 32, (posi_y - 32) / 32, MapaMain,txt,msc,pills);
+               if (movi.pontuacao((posi_x - 32) / 32, (posi_y - 32) / 32, MapaMain)) {
+                   
+                   al_play_sample(pills, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_BIDIR, NULL);
+               }
+               else {
+                   al_stop_sample_instance(ins);
+               }
+               if (movi.victory()) {
+                   victory = true;
+               }
                 
             }
         }
         al_flip_display();
+
+        //Aqui se as variavies booleanas referentes a colisao e vitoria sao verdades
+        //se forem destroi, clear no mapa escreve texto e toca musica.
+        if (coli) {
+            p.~pilulas();
+            t.~tijolos();
+            movi.~moviment_pac();
+            for (int j = 0; j < 4; j++) {
+                i[j].~inimigos();
+            }
+            iN.~inimigos_int();
+           
+            al_clear_to_color(al_map_rgb(0, 0, 0)); //clear no mapa
+            al_flip_display();
+            al_draw_textf(txt2, al_map_rgb(255, 0, 0), 900 / 2, 672 / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+            al_attach_audio_stream_to_mixer(msc2, al_get_default_mixer());
+            al_set_audio_stream_playmode(msc2, ALLEGRO_PLAYMODE_LOOP);//Quando chega ao fim, recomeça desde o início. 
+            
+            
+        }
+       
+        if (victory) {
+            p.~pilulas();
+            t.~tijolos();
+            movi.~moviment_pac();
+            for (int j = 0; j < 4; j++) {
+                i[j].~inimigos();
+            }
+            iN.~inimigos_int();
+            al_clear_to_color(al_map_rgb(0, 0, 0)); //clear no mapa
+
+            al_flip_display();
+            al_draw_textf(txt, al_map_rgb(255, 0, 0), 900 / 2, 672 / 2, ALLEGRO_ALIGN_CENTER, "VICTORY");
+            al_attach_audio_stream_to_mixer(msc, al_get_default_mixer());
+            al_set_audio_stream_playmode(msc, ALLEGRO_PLAYMODE_LOOP);//Quando chega ao fim, recomeça desde o início. 
+            
+        }
+        //Aqui se as variavies booleanas referentes a colisao e vitoria sao verdades
+        //se forem destroi, clear no mapa escreve texto e toca musica.
+        al_flip_display();
+        
+
     }
+    
     al_destroy_display(display);
     al_destroy_bitmap(borda);
     al_destroy_bitmap(fundo);
@@ -225,8 +292,10 @@ int main() {
     al_destroy_event_queue(fila_events);
     al_destroy_timer(FPS);
     al_destroy_audio_stream(msc);
+    al_destroy_audio_stream(msc2);
     al_destroy_font(txt);
     al_destroy_font(txt2);
+    al_destroy_sample_instance(ins);
     ///destroyers
     return 0;
 }

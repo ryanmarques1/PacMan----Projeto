@@ -16,7 +16,3 @@ diferente de 3 (esquerda) 'e'  for livre de obstáculos  'e'  a posição y do f
 for verdade, o fantasma deve seguir pela direita. Mesma coisa para os demais
 se pac ta indo pela direta , fantasma o segue pela esquerda, se for por cima
 segue por baixo.
-
-3º
-
-4º

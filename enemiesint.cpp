@@ -1,5 +1,5 @@
 #include "enemiesint.h"
-#include "moviment.h"
+#include "pacman.h"
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -150,16 +150,14 @@ void inimigos_int::mov_pac(int* fx, int* fy, int* spr2, char** m, int dir) {
 int inimigos_int::getdire() {
 	return dire;
 }
-void inimigos_int::colidiPac(int x, int y, int x2, int y2, int ant_pacx, int ant_pacy, ALLEGRO_FONT* t) {
+bool inimigos_int::colidiPac(int x, int y, int x2, int y2, int ant_pacx, int ant_pacy) {
 	///colisão com o pac = GAME OVER
-	if (!t) {
-		printf("Erro em carregar a fonte !\n");
-		exit(-1);
+	
+	if (x == x2 && y == y2 || ant_pacx == x2 && ant_pacy == y2) { ///comparando x do pac e y do fantasma junto com o anterior x do pac e anterior y do pac com x e y do fantasma
+		return true;
+		
 	}
-	if (x == x2 && y == y2 || ant_pacx == x2 && ant_pacy == y2) {
-		al_draw_textf(t, al_map_rgb(255, 0, 0), 900 - 135, 672 - 600, ALLEGRO_ALIGN_CENTER, "GAME OVER RUIM");
-
-	}
+	return false;
 }
 
 

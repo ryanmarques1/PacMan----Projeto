@@ -2,7 +2,7 @@
 #define ENEMIES_H_INCLUDED
 
 #include <iostream>
-#include "moviment.h"
+#include "pacman.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -20,7 +20,7 @@ class inimigos : public moviment_pac{
         void movi_random(int*,int*,int*,char**);
         virtual void mov_pac(int*, int*, int*, char**, int);
         int getdire();
-        void colidiPac(int, int, int, int, int, int, ALLEGRO_FONT*);
+        bool colidiPac(int, int, int, int, int, int);
         void MTop(int*, int*, char**);
         void MDown(int*, int*, char**);
         void MDir(int*, int*, char**);

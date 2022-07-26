@@ -1,5 +1,5 @@
 #include "enemies.h"
-#include "moviment.h"
+#include "pacman.h"
 #include <iostream>
 #include <stdlib.h>
 #include <Windows.h>
@@ -89,8 +89,6 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
     this->ym--;
 
 
-    cout << "0 - Xm = " << xm << " Ym = " << ym << endl;
-    cout << "X = " << *x << " Y = " << *y << endl;
 
     if (moviment_pac::atualizaval(*x) && dire == 0) {// Eixo x Coluna / Eixo y linha        
         int aux = *y / 32;
@@ -109,20 +107,20 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
             }
         }else
         if(moviment_pac::obstaculos(xm-1, ym, m) || moviment_pac::obstaculos(xm + 1, ym, m)){
-            cout << endl << "0\n";
+           
             int random1 = rand() % 6;
             if (random1 <= 2) {
                 MTop(x, y, m);
             }
             else{
                 while (true) {
-                    cout << "Aux: " << aux << " Aux2: " << aux2 << endl;
+                    
                     if (aux == aux2) {
                         while (true) {
                             int random2 = rand() % 2;
                             if (moviment_pac::obstaculos(xm - 1, ym, m) || moviment_pac::obstaculos(xm + 1, ym, m)) {
                                 if (xm > 0) {
-                                    cout << "1\n";
+                                   
                                     if (random2 == 0) {
                                         cout << "Esq" << endl;
                                         MEsq(x, y, m);
@@ -131,7 +129,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
                                 }
                                 else
                                 if (xm < 608) {
-                                    cout << "2\n";
+                                    
                                     if (random2 == 1) {
                                         cout << "Dir" << endl;
                                         MDir(x, y, m);
@@ -190,7 +188,7 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
                                 }
                                 else
                                 if (xm < 608) {
-                                    //cout << "2\n";
+                                   
                                     if (random2 == 1) {
                                         MDown(x, y, m);
                                         
@@ -240,18 +238,18 @@ void inimigos::movi_random(int *x, int *y, int* spr2, char** m) {// X, Y == 32
                             int random2 = rand() % 2;
                             if (moviment_pac::obstaculos(xm - 1, ym, m) || moviment_pac::obstaculos(xm + 1, ym, m)) {
                                 if (xm > 0) {
-                                    cout << "1\n";
+                                   
                                     if (random2 == 1) {
-                                        cout << "Esq" << endl;
+                                        
                                         MEsq(x, y, m);
                                         break;
                                     }
                                 }
                                 else
                                 if (xm < 608) {
-                                    cout << "2\n";
+                                    
                                     if (random2 == 0) {
-                                        cout << "Dir" << endl;
+                                       
                                         MDir(x, y, m);
                                         break;
                                     }
@@ -340,16 +338,12 @@ int inimigos::getdire() {
 
     return this->dire;
 }
-void inimigos::colidiPac(int x, int y, int x2,int y2, int ant_pacx, int ant_pacy, ALLEGRO_FONT *t) {
+bool inimigos::colidiPac(int x, int y, int x2,int y2, int ant_pacx, int ant_pacy) {
 	///colisão com o pac = GAME OVER
-    if (!t) {
-        printf("Erro em carregar a fonte !\n");
-        exit(-1);
+    if (x == x2 && y == y2 || ant_pacx == x2 && ant_pacy == y2) {
+        return true;
     }
-	if (x == x2 && y == y2 || ant_pacx == x2 && ant_pacy == y2) {
-        al_draw_textf(t, al_map_rgb(255, 0, 0), 900 - 135, 672 - 600, ALLEGRO_ALIGN_CENTER, "GAME OVER RUIM");
-      
-    }
+    return false;
 }
 
 /// -----------------------------------------------------------------------------------------------------------------------------------------------

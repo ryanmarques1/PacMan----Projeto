@@ -1,136 +1,231 @@
-#include "pacman.h"
 #include <iostream>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
+#include <Windows.h>
 #include <allegro5/allegro_native_dialog.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+
+
+#include "pacman.h"
+
+#include <string.h>
+#include <math.h>
 using namespace std;
 
+/*
 
-///Grupo : Ryan Marques de Castro, Mariana de Deus Castro e Bernardo Teixeira de Miranda INTEGRAL.
-///Chamando construtores e destrutores.
+Movimentação
+------------
+#include <allegro5/allegro5/allegro_primitives.h>
 
-tijolos::tijolos(){
-    cout << "construtor padrao\n";
-    for(int i = 0; i < 10; i++)
-        til[i] = NULL;
-    if (!til) cout << "Certo2\n";
-}
+iniciar seu addon -> al_init_primitives_addon();
 
-pilulas::pilulas(){
-    cout << "\nconstrutor padrao\n";
-    pilu = NULL;
-    if (!pilu) cout << "Certo3\n";
+EVENT_KEY_UP -> EVENT_KEY_DOWN
 
-}
+declarar variaveis -> posi_x, posi_y. atribuindo um valor a cada.
 
-tijolos::~tijolos(){
-   // int i, j;
-    for (int i = 0; i < 10; i++) {
-        al_destroy_bitmap(this->til[i]);
+
+ex: KEY_UP pressionada -<
+
+------------
+Movimentação
+
+*/
+enum keys_board{
+     KRIGHT,KLEFT,KDOWN,KUP
+};
+moviment_pac::moviment_pac(){
+    cout << "\nconstrutor padrão\n";
+    for(int i = 0; i < 5; i++){
+        tecla[i]=false;
     }
+    this->xm = 0;
+    this->ym = 0;
+    points = 0;
+    dire = 0;
+    sentido = 0;
+    movi = NULL;
+    if (!movi) cout << "Certo\n";
+}
+moviment_pac::~moviment_pac(){
+    al_destroy_bitmap(this->movi);
 }
 
-pilulas::~pilulas(){
-    al_destroy_bitmap(this->pilu);
-}
-void pilulas::desenha_pilu(char **aux){ ///196 Doces
-    int i,j;
-    float x=32,y=32;
-    pilu = al_load_bitmap("Sprites/Candy.png");
-    if (!pilu) {
-        al_show_native_message_box(al_get_current_display(), "Erro!", "Erro!", "A imagem não pode ser carregada", NULL, ALLEGRO_MESSAGEBOX_ERROR);
-        exit(-1);
-    }
-    for(i = 0 ; i < 20; i++){
-        for(j = 0; j < 20; j++){
-            if(aux[i][j] == 'P'){
-                al_draw_bitmap(pilu,x,y,0);
-            }
-            x+=32;
+void moviment_pac::direcao_personagem(ALLEGRO_EVENT ev, char** m,int x, int y){
+    int a, b;
+    if(ev.type == ALLEGRO_EVENT_KEY_DOWN){
+        switch(ev.keyboard.keycode){
+            case ALLEGRO_KEY_UP:
+                sentido = 0;
+                break;
+            case ALLEGRO_KEY_DOWN:
+                sentido = 1;
+                break;
+            case ALLEGRO_KEY_RIGHT:
+                sentido = 2;
+                break;
+            case ALLEGRO_KEY_LEFT:
+                sentido = 3;
+                break;
         }
-        x = 32;
-        y+=32;
     }
-}
 
-void tijolos::desenha_tijo(char **aux){
-    til[0] = al_load_bitmap("Sprites/B1.png");
-    til[1] = al_load_bitmap("Sprites/B2.png");
-    til[2] = al_load_bitmap("Sprites/B3.png");
-    til[3] = al_load_bitmap("Sprites/B4.png");
-    til[4] = al_load_bitmap("Sprites/B5.png");
-    til[5] = al_load_bitmap("Sprites/B6.png");
-    til[6] = al_load_bitmap("Sprites/B7.png");
-    til[7] = al_load_bitmap("Sprites/B8.png");
-    til[8] = al_load_bitmap("Sprites/B9.png");
-    til[9] = al_load_bitmap("Sprites/B10.png");
+    if (atualizaval(x) && sentido == 0) {
+        a = ceil((double)(x) / (double)32);
+        b = ceil((double)(y) / (double)32);
+        a--;
+        b--;
 
-
-    int i, j;
-    int ac = 0;
-    float x = 32, y = 32;
-    for(i = 0; i < 20; i++){
-        for(j = 0; j < 20; j++){
-            
-                switch(aux[i][j]){
-                case 'A':
-                    if(!til[0]) exit(-1);
-                    al_draw_bitmap(til[0], x, y, 0);
-                 
-                    break;
-                case 'B':
-                    if(!til[1]) exit(-1);
-                    al_draw_bitmap(til[1], x, y, 0);
-          
-                    break;
-                case 'C':
-                    if(!til[2]) exit(-1);
-                    al_draw_bitmap(til[2], x, y, 0);
-             
-                    break;
-                case 'D':
-                    if(!til[3]) exit(-1);
-                    al_draw_bitmap(til[3], x, y, 0);
-   
-                    break;
-                case 'E':
-                    if(!til[4]) exit(-1);
-                    al_draw_bitmap(til[4], x, y, 0);
- 
-                    break;
-                case 'F':
-                    if(!til[5]) exit(-1);
-                    al_draw_bitmap(til[5], x, y, 0);
-
-                    break;
-                case 'G':
-                    if(!til[6]) exit(-1);
-                    al_draw_bitmap(til[6], x, y, 0);
-
-                    break;
-                case 'H':
-                    if(!til[7]) exit(-1);
-                    al_draw_bitmap(til[7], x, y, 0);
-
-                    break;
-                case 'I':
-                    if(!til[8]) exit(-1);
-                    al_draw_bitmap(til[8], x, y, 0);
- 
-                    break;
-                case 'J':
-                    if(!til[9]) exit(-1);
-                    al_draw_bitmap(til[9], x, y, 0);
-
-                    break;
-                default:
-                    break;
-            }
-            x+=32;
+        if (y - 4 >= 32 && obstaculos(a, b - 1, m) ) {
+            dire = 0;
         }
-        x = 32;
-        y+=32;
+    }else
+    if (atualizaval(x) && sentido == 1) {
+        a = ceil((double)(x) / (double)32);
+        b = ((double)(y) / (double)32);
+        a--;
+        b--;
+        if (y + 4 <= 608 && obstaculos(a, b + 1, m)) {
+            dire = 1;
+        }
+    }else
+    if (atualizaval(y) && sentido == 2) {
+        a = ((double)(x) / (double)32);
+        b = ceil((double)(y) / (double)32);
+        a--;
+        b--;
+        if(x+ 4 <= 608 && obstaculos(a+ 1, b, m)){
+            dire = 2;
+        }
+    }else
+    if (atualizaval(y) && sentido == 3) {
+        a = ceil((double)(x) / (double)32);
+        b = ceil((double)(y) / (double)32);
+        a--;
+        b--;
+        if(x- 4 >= 32 && obstaculos(a - 1, b, m)){
+            dire = 3;
+        }
     }
 }
+
+bool moviment_pac::obstaculos(int x, int y, char** m) {
+    if (x >= 0 && y >= 0) {
+        if ((m[y][x] == 'P' || m[y][x] == '-' || m[y][x] == '0' || m[y][x] == '1')) {
+            return true;
+        }
+        else {
+            return false;
+
+        }
+    }
+}
+
+bool moviment_pac::atualizaval(int a){
+    if (a % 32 == 0) {
+        //cout << "A: " << a << " Resto: " << a % 32 << endl;
+        return true;
+    }
+    else {
+        //cout << "Resto: *" << endl;
+        return false;
+    }
+}
+
+void moviment_pac::mov_pac(int* x, int* y,int *spr, char** m, int dir=9){
+    int bit = 4;
+    if (dir != 9) {
+        dire = dir;
+    }
+    if(dire == 0){
+        //cout << "T1" << endl;
+        *spr = 2;
+        if (atualizaval(*x)) {  
+            //cout << "Aqui" << endl;
+            this->xm = ceil((double)(*x) / (double)32);
+            this->ym = ceil((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+            if(*y-bit >= 32 && obstaculos(this->xm, this->ym-1,m)){
+                *y-=bit;
+            }
+        }
+    }else
+    if(dire == 1){
+        //cout << "T2" << endl;
+        *spr = 4;
+        if (atualizaval(*x)) {
+            this->xm = ceil((double)(*x) / (double)32);
+            this->ym = ((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+            if(*y+bit <= 608 && obstaculos(this->xm, this->ym + 1, m)){
+                *y+=bit;
+            }
+        }
+    }else
+    if(dire == 2){
+        //cout << "T3" << endl;
+        *spr = 3;
+        if (atualizaval(*y)) {
+            this->xm = ((double)(*x) / (double)32);
+            this->ym = ceil((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+            if(*x+bit <= 608 && obstaculos(this->xm + 1, this->ym, m)){
+                *x+=bit;
+            }
+        }
+    }else
+    if(dire == 3){
+        //cout << "T4" << endl;
+        *spr = 1;
+        if (atualizaval(*y)) {
+            this->xm = ceil((double)(*x) / (double)32);
+            this->ym = ceil((double)(*y) / (double)32);
+            this->xm--;
+            this->ym--;
+            if(*x-bit >= 32 && obstaculos(this->xm - 1, this->ym, m)){
+                *x-=bit;
+            }
+        }
+    }
+}
+double moviment_pac::getxm() {
+    return this->xm;
+}
+double moviment_pac::getym() {
+    return this->ym;
+}
+int moviment_pac::getpoints() {
+    return this->points;
+}
+void moviment_pac::desenha(int* x, int* y, int* spr){
+    movi = al_load_bitmap("Sprites/Personagens/Voltorb/Volt.png");
+    if(!movi)exit(-1);
+    al_draw_bitmap_region(movi,0,*spr*32,32,32,*x,*y,0);
+}
+
+
+
+bool moviment_pac::pontuacao(int y,int x,char **Map){
+    ALLEGRO_FONT * txt3;
+    txt3 = al_load_font("Fonts/Vermin_Vibes_1989.ttf", 25, 0);
+    al_draw_textf(txt3, al_map_rgb(255, 0, 0), 900 - 130, 672 - 500, ALLEGRO_ALIGN_CENTER, "SCORE: %d", getpoints());
+    if(Map[x][y] == 'P'){
+
+        this->points += 35;
+        Map[x][y] = '-';
+        return true;
+        
+    }
+    return false;
+}
+
+bool moviment_pac::victory() {
+    if (this->points == 4900)
+        return true;
+    return false;
+}
+
